@@ -39,12 +39,19 @@ browser.delegate = self;
 }
 ```
 
+
 #### Requirements
 
 * iOS 7+
 
+
+#### Open source project used
+
+- [SDWebImage](https://github.com/rs/SDWebImage)
+
+
 #### License
 
-######WTFPL 
+##### MIT 
 
 
