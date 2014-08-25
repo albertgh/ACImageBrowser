@@ -44,6 +44,8 @@
     self.zoomableImageScrollView.progressView.progress = 0.0f;
     self.zoomableImageScrollView.progressView.hidden = YES;
     
+    self.zoomableImageScrollView.isLoaded = NO;
+    
     if ([ACImageBrowserUtils sharedInstance].isFullscreen)
     {
         self.backgroundColor = k_ACIB_isFullscreen_BGColor;
