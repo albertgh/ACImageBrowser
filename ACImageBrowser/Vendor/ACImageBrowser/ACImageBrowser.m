@@ -30,6 +30,9 @@ UIScrollViewDelegate
 
 @property (nonatomic, assign) BOOL                              isRoating;
 
+@property (nonatomic, retain) UIImageView                       *uglyMaskIV;
+@property (nonatomic, retain) UIProgressView                    *uglyMaskPV;
+
 @end
 
 
@@ -178,6 +181,44 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     self.collectionView.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
     
     [self.view addSubview:self.collectionView];
+    self.collectionView.alpha = 1.0f;
+    self.collectionView.hidden = NO;
+    
+    
+    //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
+    // image view
+    self.uglyMaskIV = [[UIImageView alloc] init];
+    self.uglyMaskIV.frame = self.view.bounds;
+    self.uglyMaskIV.contentMode = UIViewContentModeScaleAspectFit;
+    self.uglyMaskIV.autoresizingMask =
+    UIViewAutoresizingFlexibleTopMargin
+    | UIViewAutoresizingFlexibleRightMargin
+    | UIViewAutoresizingFlexibleBottomMargin
+    | UIViewAutoresizingFlexibleLeftMargin;
+    self.uglyMaskIV.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
+    [self.view addSubview:self.uglyMaskIV];
+    self.uglyMaskIV.alpha = 0.0f;
+    self.uglyMaskIV.hidden = YES;
+    
+    // progress view
+    CGFloat progressView_h = 2.0f;
+    CGFloat progressView_x = (self.view.bounds.size.width - k_ACZISV_progress_width) / 2.0f;
+    CGFloat progressView_y = (self.view.bounds.size.height - progressView_h) / 2.0f;
+    self.uglyMaskPV = [[UIProgressView alloc] initWithFrame:CGRectMake(progressView_x,
+                                                                       progressView_y,
+                                                                       k_ACZISV_progress_width,
+                                                                       progressView_h)];
+    self.uglyMaskPV.autoresizingMask =
+    UIViewAutoresizingFlexibleTopMargin
+    | UIViewAutoresizingFlexibleRightMargin
+    | UIViewAutoresizingFlexibleBottomMargin
+    | UIViewAutoresizingFlexibleLeftMargin;
+    self.uglyMaskPV.progress = 0.0f;
+    self.uglyMaskPV.userInteractionEnabled = NO;
+    [self.view addSubview:self.uglyMaskPV];
+    self.uglyMaskPV.alpha = 0.0f;
+    self.uglyMaskPV.hidden = YES;
+    //------------------------------------------------------------------------------------------------//
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -283,6 +324,79 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 //        self.collectionView.alpha = 0.0f;
 //    }];
     self.isRoating = YES;
+    
+    //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
+    self.collectionView.alpha = 0.0f;
+    self.collectionView.hidden = YES;
+    
+    ACImageBrowserCell *cell =
+    (ACImageBrowserCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
+    ACZoomableImageScrollView *zoomableImageScrollView = cell.zoomableImageScrollView;
+    if (zoomableImageScrollView.isLoaded)
+    {
+        UIImage *image = zoomableImageScrollView.imageView.image;
+        
+        CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
+                                 [UIScreen mainScreen].bounds.size.height);
+        
+        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+        {
+            // landscape
+            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                              [UIScreen mainScreen].bounds.size.width);
+        }
+        
+        CGFloat imageWidth = image.size.width;
+        CGFloat imageHeight = image.size.height;
+        
+        BOOL overWidth = imageWidth > size.width;
+        BOOL overHeight = imageHeight > size.height;
+        
+//        if (overWidth || overHeight)
+//        {
+//            self.uglyMaskIV.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//        }
+        
+        CGSize fitSize = CGSizeMake(imageWidth, imageHeight);
+        if (overWidth && overHeight)
+        {
+            CGFloat timesThanScreenWidth = (imageWidth / size.width);
+            if (!((imageHeight / timesThanScreenWidth) > size.height))
+            {
+                fitSize.width = size.width;
+                fitSize.height = imageHeight / timesThanScreenWidth;
+            }
+            else
+            {
+                CGFloat timesThanScreenHeight = (imageHeight / size.height);
+                fitSize.width = imageWidth / timesThanScreenHeight;
+                fitSize.height = size.height;
+            }
+        }
+        else if (overWidth && !overHeight)
+        {
+            CGFloat timesThanFrameWidth = (imageWidth / size.width);
+            fitSize.width = size.width;
+            fitSize.height = imageHeight / timesThanFrameWidth;
+        }
+        else if (overHeight && !overWidth)
+        {
+            fitSize.height = size.height;
+        }
+        self.uglyMaskIV.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
+        
+        self.uglyMaskIV.image = image;
+        self.uglyMaskIV.alpha = 1.0f;
+        self.uglyMaskIV.hidden = NO;
+    }
+    else
+    {
+        self.uglyMaskPV.progress = zoomableImageScrollView.progressView.progress;
+        self.uglyMaskPV.alpha = 1.0f;
+        self.uglyMaskPV.hidden = NO;
+        
+    }
+    //------------------------------------------------------------------------------------------------//
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
@@ -335,6 +449,16 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 //        self.collectionView.alpha = 1.0f;
 //    }];
     self.isRoating = NO;
+    
+    //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
+    self.uglyMaskIV.alpha = 0.0f;
+    self.uglyMaskIV.hidden = YES;
+    self.uglyMaskPV.alpha = 0.0f;
+    self.uglyMaskPV.hidden = YES;
+    
+    self.collectionView.alpha = 1.0f;
+    self.collectionView.hidden = NO;
+    //------------------------------------------------------------------------------------------------//
 }
 
 
@@ -365,6 +489,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
                 [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
                     self.view.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
                     self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+                    self.uglyMaskIV.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
                 } completion:NULL];
             }
             else
@@ -372,6 +497,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
                 [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
                     self.view.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
                     self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+                    self.uglyMaskIV.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
                 } completion:NULL];
             }
         }
