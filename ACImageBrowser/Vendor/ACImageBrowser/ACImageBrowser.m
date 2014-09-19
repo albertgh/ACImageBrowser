@@ -107,6 +107,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
                                 atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
 }
 
+
 #pragma mark -
 
 - (id)initWithImagesURLArray:(NSArray *)imagesURLArray
@@ -150,12 +151,18 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
                              [UIScreen mainScreen].bounds.size.height);
     
-    if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation))
+
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
     {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
         currentLayout = self.landscapeLayout;
-        size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                          [UIScreen mainScreen].bounds.size.width);
+        if (k_ACIBU_OSVersion < 8.0f)
+        {
+            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                              [UIScreen mainScreen].bounds.size.width);
+        }
     }
+    
     
     CGRect rect = CGRectMake(0,
                              0,
@@ -327,10 +334,25 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 //    }];
     self.isRoating = YES;
     
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+    }
+    else
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+    }
+    
     //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
     self.collectionView.alpha = 0.0f;
     self.collectionView.hidden = YES;
-    
+    //------------------------------------------------------------------------------------------------//
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                                         duration:(NSTimeInterval)duration
+{
+    //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
     ACImageBrowserCell *cell =
     (ACImageBrowserCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
     ACZoomableImageScrollView *zoomableImageScrollView = cell.zoomableImageScrollView;
@@ -343,9 +365,11 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         
         if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
         {
-            // landscape
-            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                              [UIScreen mainScreen].bounds.size.width);
+            if (k_ACIBU_OSVersion < 8.0f)
+            {
+                size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                                  [UIScreen mainScreen].bounds.size.width);
+            }
         }
         
         CGFloat imageWidth = image.size.width;
@@ -353,11 +377,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         
         BOOL overWidth = imageWidth > size.width;
         BOOL overHeight = imageHeight > size.height;
-        
-//        if (overWidth || overHeight)
-//        {
-//            self.uglyMaskIV.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-//        }
         
         CGSize fitSize = CGSizeMake(imageWidth, imageHeight);
         if (overWidth && overHeight)
@@ -385,25 +404,27 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         {
             fitSize.height = size.height;
         }
-        self.uglyMaskIV.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
         
-        self.uglyMaskIV.image = image;
         self.uglyMaskIV.alpha = 1.0f;
         self.uglyMaskIV.hidden = NO;
+        
+        // rotation animation
+        [UIView animateWithDuration:duration animations:^{
+            self.uglyMaskIV.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
+        } completion:^(BOOL finished) {
+            
+        }];
+        
+        self.uglyMaskIV.image = image;
     }
     else
     {
         self.uglyMaskPV.progress = zoomableImageScrollView.progressView.progress;
         self.uglyMaskPV.alpha = 1.0f;
         self.uglyMaskPV.hidden = NO;
-        
     }
     //------------------------------------------------------------------------------------------------//
-}
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-                                         duration:(NSTimeInterval)duration
-{
+    
     // pack up info
     NSMutableDictionary *notificationObject = [[NSMutableDictionary alloc] initWithCapacity:1];
     id interfaceOrientation = [NSNumber numberWithInteger:toInterfaceOrientation];
@@ -418,9 +439,12 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
     {
+        if (k_ACIBU_OSVersion < 8.0f)
+        {
+            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                              [UIScreen mainScreen].bounds.size.width);
+        }
         [self.collectionView setCollectionViewLayout:self.landscapeLayout animated:NO];
-        size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                          [UIScreen mainScreen].bounds.size.width);
         [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_WillRotateNotificationName
                                                             object:notificationObject];
     }
@@ -431,18 +455,18 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
                                                             object:notificationObject];
     }
     
-    
+    // rotation animation
     [UIView animateWithDuration:duration animations:^{
         self.collectionView.frame = CGRectMake(0,
                                                0,
                                                size.width + k_ACIB_PageGap,
                                                size.height);
-     } completion:^(BOOL finished) {
-         
-     }];
+    } completion:^(BOOL finished) {
+        
+    }];
     
-    [self scrollToCurrentIndexAnimated:NO];
-    //[self scrollToCurrentIndexByCurrentSize:size animated:NO];
+    //[self scrollToCurrentIndexAnimated:NO];
+    [self scrollToCurrentIndexByCurrentSize:size animated:NO];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
@@ -468,50 +492,45 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
 - (void)fullscreenMode:(NSNotification*)notification
 {
-    if ([[notification name] isEqualToString:k_ACIBU_FullscreenNotificationName])
+    NSString *notificationObject = notification.object;
+    
+    BOOL wantFullscreen = NO;
+    
+    if ([notificationObject isEqualToString:k_ACIBU_WantFullscreenYES])
     {
-        NSString *notificationObject = notification.object;
-        
-        BOOL wantFullscreen = NO;
-        
-        if ([notificationObject isEqualToString:k_ACIBU_WantFullscreenYES])
-        {
-            wantFullscreen = YES;
-        }
-        
-        if (k_ACIBU_OSVersion >= 7.0f)
-        {
-            // iOS 7
-            [[UIApplication sharedApplication] setStatusBarHidden:wantFullscreen withAnimation:UIStatusBarAnimationSlide];
-            
-            [self.navigationController setNavigationBarHidden:wantFullscreen animated:YES];
-            
-            if (wantFullscreen)
-            {
-                [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
-                    self.view.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-                    self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-                    self.uglyMaskIV.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-                } completion:^(BOOL finished) {
-                    self.isFullscreen = YES;
-                }];
-            }
-            else
-            {
-                [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
-                    self.view.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-                    self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-                    self.uglyMaskIV.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-                } completion:^(BOOL finished) {
-                    self.isFullscreen = NO;
-                }];
-            }
-        }
-        else
-        {
-            // iOS < 7
-            
-        }
+        wantFullscreen = YES;
+    }
+    
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+    }
+    else
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:wantFullscreen withAnimation:UIStatusBarAnimationSlide];
+    }
+    
+    [self.navigationController setNavigationBarHidden:wantFullscreen animated:YES];
+    
+    if (wantFullscreen)
+    {
+        [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
+            self.view.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+            self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+            self.uglyMaskIV.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+        } completion:^(BOOL finished) {
+            self.isFullscreen = YES;
+        }];
+    }
+    else
+    {
+        [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
+            self.view.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+            self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+            self.uglyMaskIV.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+        } completion:^(BOOL finished) {
+            self.isFullscreen = NO;
+        }];
     }
 }
 
@@ -537,6 +556,5 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     [[SDImageCache sharedImageCache] clearMemory];
     [self removeFullscreenModeNotificationObserver];
 }
-
 
 @end

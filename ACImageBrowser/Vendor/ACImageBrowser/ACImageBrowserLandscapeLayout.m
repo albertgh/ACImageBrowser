@@ -18,8 +18,29 @@
     {
         // Initialization code
         
-        self.itemSize = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                                   [UIScreen mainScreen].bounds.size.width);
+        CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
+                                 [UIScreen mainScreen].bounds.size.height);
+        
+        if (k_ACIBU_OSVersion < 8.0f)
+        {
+            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                              [UIScreen mainScreen].bounds.size.width);
+        }
+        else
+        {
+            if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
+            {
+                size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
+                                  [UIScreen mainScreen].bounds.size.height);
+            }
+            else
+            {
+                size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                                  [UIScreen mainScreen].bounds.size.width);
+            }
+        }
+          
+        self.itemSize = size;
         
         self.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
         

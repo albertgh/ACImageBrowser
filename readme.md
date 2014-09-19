@@ -2,6 +2,9 @@
 
 A Image Browser
 
+
+Support iOS 8  now.
+
 <img src="https://github.com/albertgh/ACImageBrowser/raw/master/screenshot.gif"/>
 
 
@@ -24,6 +27,9 @@ ACImageBrowser *browser = [[ACImageBrowser alloc] initWithImagesURLArray:photosU
 
 // Browse from which index.
 [browser setPageIndex:2];
+
+// Disable single tap to turn on and off fullscreen mode, default is YES.
+browser.fullscreenEnable = NO;
 ```
 
 ```objc

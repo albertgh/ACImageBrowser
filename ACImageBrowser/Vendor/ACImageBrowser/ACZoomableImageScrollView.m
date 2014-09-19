@@ -141,7 +141,6 @@
     
     self.maximumZoomScale = 1.0 * k_ACZISV_zoom_bigger;
     self.minimumZoomScale = 1.0;
-    self.imageView.frame = CGRectMake(0, 0, 0, 0);
     
     BOOL overWidth = imageWidth > self.bounds.size.width;
     BOOL overHeight = imageHeight > self.bounds.size.height;
@@ -183,7 +182,7 @@
         fitSize.height = self.bounds.size.height;
     }
     
-    self.imageView.frame = CGRectMake(0, 0, fitSize.width, fitSize.height);
+    self.imageView.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
     self.imageView.center = center;
     self.contentSize = CGSizeMake(fitSize.width, fitSize.height);
     
@@ -205,31 +204,27 @@
     
     CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
                              [UIScreen mainScreen].bounds.size.height);
-    
+
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
     {
-        // landscape
-        size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                          [UIScreen mainScreen].bounds.size.width);
+        if (k_ACIBU_OSVersion < 8.0f)
+        {
+            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                              [UIScreen mainScreen].bounds.size.width);
+        }
     }
     
-    // rest imageView frame
     CGPoint centerPoint = CGPointMake(size.width / 2.0f, size.height / 2.0f);
-    
     
     // rotation animation
     [UIView animateWithDuration:duration animations:^{
-
+        // rest imageView
         [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
-                
         // rest progressView
         self.progressView.center = centerPoint;
-        
     } completion:^(BOOL finished) {
         
     }];
-    
-    
 }
 
 #pragma mark - add orientation notification listener
@@ -288,8 +283,6 @@
         self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         
-        
-        // allow drag vertically
         //self.alwaysBounceVertical = YES;
         
         self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
@@ -307,6 +300,13 @@
 {
     self.imageView = [[UIImageView alloc] init];
     self.imageView.frame = self.bounds;
+    
+    self.imageView.autoresizingMask =
+    UIViewAutoresizingFlexibleTopMargin
+    | UIViewAutoresizingFlexibleRightMargin
+    | UIViewAutoresizingFlexibleBottomMargin
+    | UIViewAutoresizingFlexibleLeftMargin;
+    
     
     self.imageView.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
     self.imageView.userInteractionEnabled = YES;

@@ -64,15 +64,24 @@
                 
         self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
         
+        self.autoresizingMask =
+        UIViewAutoresizingFlexibleWidth
+        |UIViewAutoresizingFlexibleHeight;
+        
+        self.contentView.autoresizingMask =
+        UIViewAutoresizingFlexibleWidth
+        |UIViewAutoresizingFlexibleHeight;
+        
         self.zoomableImageScrollView =
         [[ACZoomableImageScrollView alloc]
          initWithFrame:CGRectMake(0,
                                   0,
                                   self.bounds.size.width,
                                   self.bounds.size.height)];
-
+        
         self.zoomableImageScrollView.autoresizingMask =
-        UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        UIViewAutoresizingFlexibleWidth
+        |UIViewAutoresizingFlexibleHeight;
         
         [self.contentView addSubview:self.zoomableImageScrollView];
     }
