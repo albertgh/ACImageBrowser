@@ -26,10 +26,6 @@ UIScrollViewDelegate
 
 @property (nonatomic, retain) NSArray                           *imagesURLArray;
 
-@property (nonatomic, assign) BOOL                              isRoating;
-
-@property (nonatomic, assign) NSInteger                         statusBarHiddenInteger;
-
 @property (nonatomic, retain) UIImageView                       *uglyMaskIV;
 @property (nonatomic, retain) UIProgressView                    *uglyMaskPV;
 
@@ -56,20 +52,16 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         if (index >= photoCount)
             index = self.imagesURLArray.count - 1;
     }
-    self.currentPage = index;
+    _currentPage = index;
 }
 
 #pragma mark - Action 
 
 - (void)closeButtonTapped:(UIButton *)sender
 {
-    if (self.statusBarHiddenInteger == 0)
+    if ([UIApplication sharedApplication].statusBarHidden)
     {
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-    }
-    else
-    {
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     }
 
     if ([self.delegate respondsToSelector:@selector(dismissAtIndex:)])
@@ -127,20 +119,11 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     if (self)
     {
         // Custom initialization
-        self.title = @" ";
-        self.currentPage = 0;
+        self.title = @"";
+        _currentPage = 0;
         self.fullscreenEnable = YES;
-        self.isFullscreen = NO;
+        _isFullscreen = NO;
         self.imagesURLArray = imagesURLArray;
-        
-        if ([UIApplication sharedApplication].statusBarHidden)
-        {
-            self.statusBarHiddenInteger = 1;
-        }
-        else
-        {
-            self.statusBarHiddenInteger = 0;
-        }
     }
     return self;
 }
@@ -287,7 +270,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         {
             index = self.imagesURLArray.count - 1;
         }
-        self.currentPage = index;
+        _currentPage = index;
         [self updateTitleText];
     }
 }
@@ -352,7 +335,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 //    [UIView animateWithDuration:0.01 animations:^{
 //        self.collectionView.alpha = 0.0f;
 //    }];
-    self.isRoating = YES;
+    _isRoating = YES;
     
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
     {
@@ -360,90 +343,174 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     }
     else
     {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+        if (!self.isFullscreen)
+        {
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+        }
     }
     
-    //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
-    self.collectionView.alpha = 0.0f;
-    self.collectionView.hidden = YES;
+    if (k_ACIBU_OSVersion < 8.0f)
+    {
+        //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
+        self.collectionView.alpha = 0.0f;
+        self.collectionView.hidden = YES;
+        
+        ACImageBrowserCell *cell =
+        (ACImageBrowserCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
+        ACZoomableImageScrollView *zoomableImageScrollView = cell.zoomableImageScrollView;
+        if (zoomableImageScrollView.isLoaded)
+        {
+            UIImage *image = zoomableImageScrollView.imageView.image;
+            
+            CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
+                                     [UIScreen mainScreen].bounds.size.height);
+            
+            if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+            {
+                if (k_ACIBU_OSVersion < 8.0f)
+                {
+                    size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                                      [UIScreen mainScreen].bounds.size.width);
+                }
+            }
+            
+            CGFloat imageWidth = image.size.width;
+            CGFloat imageHeight = image.size.height;
+            
+            BOOL overWidth = imageWidth > size.width;
+            BOOL overHeight = imageHeight > size.height;
+            
+            CGSize fitSize = CGSizeMake(imageWidth, imageHeight);
+            if (overWidth && overHeight)
+            {
+                CGFloat timesThanScreenWidth = (imageWidth / size.width);
+                if (!((imageHeight / timesThanScreenWidth) > size.height))
+                {
+                    fitSize.width = size.width;
+                    fitSize.height = imageHeight / timesThanScreenWidth;
+                }
+                else
+                {
+                    CGFloat timesThanScreenHeight = (imageHeight / size.height);
+                    fitSize.width = imageWidth / timesThanScreenHeight;
+                    fitSize.height = size.height;
+                }
+            }
+            else if (overWidth && !overHeight)
+            {
+                CGFloat timesThanFrameWidth = (imageWidth / size.width);
+                fitSize.width = size.width;
+                fitSize.height = imageHeight / timesThanFrameWidth;
+            }
+            else if (overHeight && !overWidth)
+            {
+                fitSize.height = size.height;
+            }
+            
+            self.uglyMaskIV.alpha = 1.0f;
+            self.uglyMaskIV.hidden = NO;
+            
+            // rotation animation
+            [UIView animateWithDuration:duration animations:^{
+                self.uglyMaskIV.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
+            } completion:^(BOOL finished) {
+                
+            }];
+            
+            self.uglyMaskIV.image = image;
+        }
+        else
+        {
+            self.uglyMaskPV.progress = zoomableImageScrollView.progressView.progress;
+            self.uglyMaskPV.alpha = 1.0f;
+            self.uglyMaskPV.hidden = NO;
+        }
     //------------------------------------------------------------------------------------------------//
+    }
 }
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                          duration:(NSTimeInterval)duration
 {
-    //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
-    ACImageBrowserCell *cell =
-    (ACImageBrowserCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
-    ACZoomableImageScrollView *zoomableImageScrollView = cell.zoomableImageScrollView;
-    if (zoomableImageScrollView.isLoaded)
+    if (k_ACIBU_OSVersion >= 8.0f)
     {
-        UIImage *image = zoomableImageScrollView.imageView.image;
+        //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
+        self.collectionView.alpha = 0.0f;
+        self.collectionView.hidden = YES;
         
-        CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
-                                 [UIScreen mainScreen].bounds.size.height);
-        
-        if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
+        ACImageBrowserCell *cell =
+        (ACImageBrowserCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
+        ACZoomableImageScrollView *zoomableImageScrollView = cell.zoomableImageScrollView;
+        if (zoomableImageScrollView.isLoaded)
         {
-            if (k_ACIBU_OSVersion < 8.0f)
+            UIImage *image = zoomableImageScrollView.imageView.image;
+            
+            CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
+                                     [UIScreen mainScreen].bounds.size.height);
+            
+            if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation))
             {
-                size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                                  [UIScreen mainScreen].bounds.size.width);
+                if (k_ACIBU_OSVersion < 8.0f)
+                {
+                    size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
+                                      [UIScreen mainScreen].bounds.size.width);
+                }
             }
-        }
-        
-        CGFloat imageWidth = image.size.width;
-        CGFloat imageHeight = image.size.height;
-        
-        BOOL overWidth = imageWidth > size.width;
-        BOOL overHeight = imageHeight > size.height;
-        
-        CGSize fitSize = CGSizeMake(imageWidth, imageHeight);
-        if (overWidth && overHeight)
-        {
-            CGFloat timesThanScreenWidth = (imageWidth / size.width);
-            if (!((imageHeight / timesThanScreenWidth) > size.height))
+            
+            CGFloat imageWidth = image.size.width;
+            CGFloat imageHeight = image.size.height;
+            
+            BOOL overWidth = imageWidth > size.width;
+            BOOL overHeight = imageHeight > size.height;
+            
+            CGSize fitSize = CGSizeMake(imageWidth, imageHeight);
+            if (overWidth && overHeight)
             {
+                CGFloat timesThanScreenWidth = (imageWidth / size.width);
+                if (!((imageHeight / timesThanScreenWidth) > size.height))
+                {
+                    fitSize.width = size.width;
+                    fitSize.height = imageHeight / timesThanScreenWidth;
+                }
+                else
+                {
+                    CGFloat timesThanScreenHeight = (imageHeight / size.height);
+                    fitSize.width = imageWidth / timesThanScreenHeight;
+                    fitSize.height = size.height;
+                }
+            }
+            else if (overWidth && !overHeight)
+            {
+                CGFloat timesThanFrameWidth = (imageWidth / size.width);
                 fitSize.width = size.width;
-                fitSize.height = imageHeight / timesThanScreenWidth;
+                fitSize.height = imageHeight / timesThanFrameWidth;
             }
-            else
+            else if (overHeight && !overWidth)
             {
-                CGFloat timesThanScreenHeight = (imageHeight / size.height);
-                fitSize.width = imageWidth / timesThanScreenHeight;
                 fitSize.height = size.height;
             }
-        }
-        else if (overWidth && !overHeight)
-        {
-            CGFloat timesThanFrameWidth = (imageWidth / size.width);
-            fitSize.width = size.width;
-            fitSize.height = imageHeight / timesThanFrameWidth;
-        }
-        else if (overHeight && !overWidth)
-        {
-            fitSize.height = size.height;
-        }
-        
-        self.uglyMaskIV.alpha = 1.0f;
-        self.uglyMaskIV.hidden = NO;
-        
-        // rotation animation
-        [UIView animateWithDuration:duration animations:^{
-            self.uglyMaskIV.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
-        } completion:^(BOOL finished) {
             
-        }];
-        
-        self.uglyMaskIV.image = image;
+            self.uglyMaskIV.alpha = 1.0f;
+            self.uglyMaskIV.hidden = NO;
+            
+            // rotation animation
+            [UIView animateWithDuration:duration animations:^{
+                self.uglyMaskIV.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
+                self.uglyMaskIV.center = CGPointMake(size.width / 2.0f, size.height / 2.0f);
+            } completion:^(BOOL finished) {
+                
+            }];
+            
+            self.uglyMaskIV.image = image;
+        }
+        else
+        {
+            self.uglyMaskPV.progress = zoomableImageScrollView.progressView.progress;
+            self.uglyMaskPV.alpha = 1.0f;
+            self.uglyMaskPV.hidden = NO;
+        }
+        //------------------------------------------------------------------------------------------------//
     }
-    else
-    {
-        self.uglyMaskPV.progress = zoomableImageScrollView.progressView.progress;
-        self.uglyMaskPV.alpha = 1.0f;
-        self.uglyMaskPV.hidden = NO;
-    }
-    //------------------------------------------------------------------------------------------------//
     
     // pack up info
     NSMutableDictionary *notificationObject = [[NSMutableDictionary alloc] initWithCapacity:1];
@@ -494,7 +561,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 //    [UIView animateWithDuration:0.01f animations:^{
 //        self.collectionView.alpha = 1.0f;
 //    }];
-    self.isRoating = NO;
+    _isRoating = NO;
     
     //-- dirty solution to fix ugly rotate animation ----------------------------------------------------
     self.uglyMaskIV.alpha = 0.0f;
@@ -539,7 +606,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
             self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
             self.uglyMaskIV.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
         } completion:^(BOOL finished) {
-            self.isFullscreen = YES;
+            _isFullscreen = YES;
         }];
     }
     else
@@ -549,7 +616,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
             self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
             self.uglyMaskIV.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
         } completion:^(BOOL finished) {
-            self.isFullscreen = NO;
+            _isFullscreen = NO;
         }];
     }
 }

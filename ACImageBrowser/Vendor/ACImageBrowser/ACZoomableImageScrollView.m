@@ -97,7 +97,7 @@
                      {
                          weakImageView.image = image;
                          
-                         [self fitImageViewFrameByImageSize:image.size centerPoint:centerPoint];
+                        [self fitImageViewFrameByImageSize:image.size centerPoint:centerPoint];
                      }
                      else
                      {
@@ -120,7 +120,6 @@
     }
     
 }
-
 
 #pragma mark - Calculate ImageView frame
 
@@ -429,37 +428,43 @@
     }
     else if (tapGesture.numberOfTapsRequired == 1)
     {
-        if (self.imageBrowser.fullscreenEnable)
+        //-- fullscreen mode switch ----------------------------------------------------------------
+        if (!self.imageBrowser.isRoating)
         {
-            if (self.imageBrowser.isFullscreen)
+            if (self.imageBrowser.fullscreenEnable)
             {
-                self.userInteractionEnabled = NO;
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_FullscreenNotificationName
-                                                                    object:k_ACIBU_WantFullscreenNO];
-                
-                [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
-                    self.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-                    self.imageView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-                } completion:^(BOOL finished) {
-                    self.userInteractionEnabled = YES;
-                }];
-            }
-            else
-            {
-                self.userInteractionEnabled = NO;
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_FullscreenNotificationName
-                                                                    object:k_ACIBU_WantFullscreenYES];
-                
-                [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
-                    self.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-                    self.imageView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-                } completion:^(BOOL finished) {
-                    self.userInteractionEnabled = YES;
-                }];
+                if (self.imageBrowser.isFullscreen)
+                {
+                    self.userInteractionEnabled = NO;
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_FullscreenNotificationName
+                                                                        object:k_ACIBU_WantFullscreenNO];
+                    
+                    [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
+                        self.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+                        self.imageView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+                    } completion:^(BOOL finished) {
+                        self.userInteractionEnabled = YES;
+                    }];
+                }
+                else
+                {
+                    self.userInteractionEnabled = NO;
+                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_FullscreenNotificationName
+                                                                        object:k_ACIBU_WantFullscreenYES];
+                    
+                    [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
+                        self.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+                        self.imageView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+                    } completion:^(BOOL finished) {
+                        self.userInteractionEnabled = YES;
+                    }];
+                }
             }
         }
+        //----------------------------------------------------------------------------------------//
+        
     }
 }
 

@@ -22,8 +22,10 @@
 
 - (void)setPageIndex:(NSUInteger)index;
 
-/** DO NOT SET THESE ! */
-@property (nonatomic, assign) NSInteger                     currentPage;
-@property (nonatomic, assign) BOOL                          isFullscreen;
+/** readonly */
+@property (nonatomic, assign, readonly) BOOL                isRoating;
+
+@property (nonatomic, assign, readonly) NSInteger           currentPage;
+@property (nonatomic, assign, readonly) BOOL                isFullscreen;
 
 @end
