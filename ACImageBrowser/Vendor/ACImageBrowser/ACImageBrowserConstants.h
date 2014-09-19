@@ -30,4 +30,30 @@ static NSString * const ACIB_DISMISS_BUTTON_String                              
 
 
 
+
+
+//-- DO NOT CHANGE THESE ---------------------------------------------------------------------------
+#define k_ACIBU_OSVersion                                   ([[[UIDevice currentDevice] systemVersion] floatValue])
+
+
+#define k_ACIBU_BGColor_AnimationDuration                   0.28f
+
+
+#define k_ACIBU_WillRotateNotificationName                  @"k_ACIBU_WillRotateNotificationName"
+#define k_ACIBU_WillRotateNotificationInfoInterfaceOrientationKey \
+@"k_ACIBU_WillRotateNotificationInfoInterfaceOrientationKey"
+#define k_ACIBU_WillRotateNotificationInfoDurationTimekey \
+@"k_ACIBU_WillRotateNotificationInfoDurationTimekey"
+
+
+#define k_ACIBU_FullscreenNotificationName                  @"k_ACIBU_FullscreenNotificationName"
+#define k_ACIBU_WantFullscreenYES                           @"k_ACIBU_FullscreenYES"
+#define k_ACIBU_WantFullscreenNO                            @"k_ACIBU_FullscreenNO"
+
+#define k_ACIB_PathHead_FileString                          @"file"
+#define k_ACIB_PathHead_HTTPString                          @"http"
+//-------------------------------------------------------------------------------------------//
+
+
+
 #endif

@@ -8,11 +8,15 @@
 
 #import "SDWebImageOperation.h"
 
+@class ACImageBrowser;
+
 @interface ACZoomableImageScrollView : UIScrollView
+
+@property (nonatomic, weak) ACImageBrowser                  *imageBrowser;
 
 @property (nonatomic, retain) UIImageView                   *imageView;
 
-@property (nonatomic, retain) id <SDWebImageOperation>      webImageOperation;
+@property (nonatomic, weak) id <SDWebImageOperation>        webImageOperation;
 
 @property (nonatomic, retain) UIProgressView                *progressView;
 

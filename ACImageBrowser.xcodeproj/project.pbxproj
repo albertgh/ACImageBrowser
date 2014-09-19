@@ -23,7 +23,6 @@
 		765AB7C919A8549800F81A2E /* ACImageBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB79719A8549800F81A2E /* ACImageBrowserCell.m */; };
 		765AB7CA19A8549800F81A2E /* ACImageBrowserLandscapeLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB79A19A8549800F81A2E /* ACImageBrowserLandscapeLayout.m */; };
 		765AB7CB19A8549800F81A2E /* ACImageBrowserPortraitLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB79C19A8549800F81A2E /* ACImageBrowserPortraitLayout.m */; };
-		765AB7CC19A8549800F81A2E /* ACImageBrowserUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB79E19A8549800F81A2E /* ACImageBrowserUtils.m */; };
 		765AB7CD19A8549800F81A2E /* ACZoomableImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB7A019A8549800F81A2E /* ACZoomableImageScrollView.m */; };
 		765AB7CE19A8549800F81A2E /* error_x.png in Resources */ = {isa = PBXBuildFile; fileRef = 765AB7A219A8549800F81A2E /* error_x.png */; };
 		765AB7CF19A8549800F81A2E /* error_x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 765AB7A319A8549800F81A2E /* error_x@2x.png */; };
@@ -83,8 +82,6 @@
 		765AB79A19A8549800F81A2E /* ACImageBrowserLandscapeLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserLandscapeLayout.m; sourceTree = "<group>"; };
 		765AB79B19A8549800F81A2E /* ACImageBrowserPortraitLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowserPortraitLayout.h; sourceTree = "<group>"; };
 		765AB79C19A8549800F81A2E /* ACImageBrowserPortraitLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserPortraitLayout.m; sourceTree = "<group>"; };
-		765AB79D19A8549800F81A2E /* ACImageBrowserUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowserUtils.h; sourceTree = "<group>"; };
-		765AB79E19A8549800F81A2E /* ACImageBrowserUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserUtils.m; sourceTree = "<group>"; };
 		765AB79F19A8549800F81A2E /* ACZoomableImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACZoomableImageScrollView.h; sourceTree = "<group>"; };
 		765AB7A019A8549800F81A2E /* ACZoomableImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACZoomableImageScrollView.m; sourceTree = "<group>"; };
 		765AB7A219A8549800F81A2E /* error_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error_x.png; sourceTree = "<group>"; };
@@ -247,8 +244,6 @@
 				765AB79719A8549800F81A2E /* ACImageBrowserCell.m */,
 				765AB79F19A8549800F81A2E /* ACZoomableImageScrollView.h */,
 				765AB7A019A8549800F81A2E /* ACZoomableImageScrollView.m */,
-				765AB79D19A8549800F81A2E /* ACImageBrowserUtils.h */,
-				765AB79E19A8549800F81A2E /* ACImageBrowserUtils.m */,
 				765AB7A119A8549800F81A2E /* images */,
 			);
 			path = ACImageBrowser;
@@ -430,7 +425,6 @@
 				765AB7C919A8549800F81A2E /* ACImageBrowserCell.m in Sources */,
 				765AB7D319A8549800F81A2E /* SDImageCache.m in Sources */,
 				765AB77019A8545E00F81A2E /* main.m in Sources */,
-				765AB7CC19A8549800F81A2E /* ACImageBrowserUtils.m in Sources */,
 				765AB7DB19A8549800F81A2E /* UIImage+GIF.m in Sources */,
 				765AB7D619A8549800F81A2E /* SDWebImageDownloader.m in Sources */,
 				765AB7DF19A8549800F81A2E /* UIImageView+WebCache.m in Sources */,
@@ -633,6 +627,7 @@
 				765AB78E19A8545E00F81A2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		765AB78F19A8545E00F81A2E /* Build configuration list for PBXNativeTarget "ACImageBrowserTests" */ = {
 			isa = XCConfigurationList;
@@ -641,6 +636,7 @@
 				765AB79119A8545E00F81A2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

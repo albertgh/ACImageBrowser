@@ -7,7 +7,7 @@
 #import "ACZoomableImageScrollView.h"
 
 #import "ACImageBrowserConstants.h"
-#import "ACImageBrowserUtils.h"
+#import "ACImageBrowser.h"
 
 #import "UIImageView+WebCache.h"
 
@@ -72,8 +72,8 @@
          options:SDWebImageRetryFailed | SDWebImageContinueInBackground
          progress:^(NSInteger receivedSize, NSInteger expectedSize) {
              
-             if (ABS(item - [ACImageBrowserUtils sharedInstance].currentPage) == 1
-                 || (item - [ACImageBrowserUtils sharedInstance].currentPage) == 0)
+             if (ABS(item - self.imageBrowser.currentPage) == 1
+                 || (item - self.imageBrowser.currentPage) == 0)
              {
                  weakProgressView.progress = ((float)receivedSize / expectedSize);
              }
@@ -86,8 +86,8 @@
              dispatch_async(dispatch_get_main_queue(), ^{
                  // download image request maybe calls by current cell
                  // or next or prev by scrolling
-                 if (ABS(item - [ACImageBrowserUtils sharedInstance].currentPage) == 1
-                     || (item - [ACImageBrowserUtils sharedInstance].currentPage) == 0)
+                 if (ABS(item - self.imageBrowser.currentPage) == 1
+                     || (item - self.imageBrowser.currentPage) == 0)
                  {
                      //DLog(@"should finish");
                      weakProgressView.alpha = 0.0f;
@@ -258,7 +258,7 @@
 {
     [super layoutSubviews];
     
-    if ([ACImageBrowserUtils sharedInstance].isFullscreen)
+    if (self.imageBrowser.isFullscreen)
     {
         self.backgroundColor = k_ACIB_isFullscreen_BGColor;
         self.imageView.backgroundColor = k_ACIB_isFullscreen_BGColor;
@@ -429,27 +429,36 @@
     }
     else if (tapGesture.numberOfTapsRequired == 1)
     {
-        if ([ACImageBrowserUtils sharedInstance].isFullscreen)
+        if (self.imageBrowser.fullscreenEnable)
         {
-            [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_FullscreenNotificationName
-                                                                object:k_ACIBU_WantFullscreenNO];
-            [ACImageBrowserUtils sharedInstance].isFullscreen = NO;
-            
-            [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
-                self.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-                self.imageView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-            } completion:NULL];
-        }
-        else
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_FullscreenNotificationName
-                                                                object:k_ACIBU_WantFullscreenYES];
-            [ACImageBrowserUtils sharedInstance].isFullscreen = YES;
-            
-            [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
-                self.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-                self.imageView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-            } completion:NULL];
+            if (self.imageBrowser.isFullscreen)
+            {
+                self.userInteractionEnabled = NO;
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_FullscreenNotificationName
+                                                                    object:k_ACIBU_WantFullscreenNO];
+                
+                [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
+                    self.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+                    self.imageView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+                } completion:^(BOOL finished) {
+                    self.userInteractionEnabled = YES;
+                }];
+            }
+            else
+            {
+                self.userInteractionEnabled = NO;
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:k_ACIBU_FullscreenNotificationName
+                                                                    object:k_ACIBU_WantFullscreenYES];
+                
+                [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
+                    self.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+                    self.imageView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+                } completion:^(BOOL finished) {
+                    self.userInteractionEnabled = YES;
+                }];
+            }
         }
     }
 }

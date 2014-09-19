@@ -6,11 +6,13 @@
 
 #import <UIKit/UIKit.h>
 
-@class ACZoomableImageScrollView;
+@class ACZoomableImageScrollView, ACImageBrowser;
 
 @interface ACImageBrowserCell : UICollectionViewCell
 
-@property (nonatomic, retain) ACZoomableImageScrollView   *zoomableImageScrollView;
+@property (nonatomic, weak) ACImageBrowser                  *imageBrowser;
+
+@property (nonatomic, retain) ACZoomableImageScrollView     *zoomableImageScrollView;
 
 -(void)configCellImageByURL:(NSURL *)url
                      atItem:(NSInteger)item;

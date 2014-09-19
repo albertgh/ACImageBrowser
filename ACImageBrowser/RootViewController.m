@@ -43,6 +43,7 @@
     
     ACImageBrowser *browser = [[ACImageBrowser alloc] initWithImagesURLArray:photosURL];
     browser.delegate = self;
+    //browser.fullscreenEnable = NO;
     [browser setPageIndex:2];
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:browser];
     nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;

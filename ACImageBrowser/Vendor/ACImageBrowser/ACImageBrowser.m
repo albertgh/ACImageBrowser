@@ -10,7 +10,6 @@
 #import "ACImageBrowserLandscapeLayout.h"
 #import "ACImageBrowserCell.h"
 #import "ACZoomableImageScrollView.h"
-#import "ACImageBrowserUtils.h"
 
 #import "UIImageView+WebCache.h"
 
@@ -26,7 +25,6 @@ UIScrollViewDelegate
 @property (nonatomic, retain) ACImageBrowserLandscapeLayout     *landscapeLayout;
 
 @property (nonatomic, retain) NSArray                           *imagesURLArray;
-@property (nonatomic, assign) NSInteger                         currentPage;
 
 @property (nonatomic, assign) BOOL                              isRoating;
 
@@ -119,7 +117,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         // Custom initialization
         self.title = @" ";
         self.currentPage = 0;
-        [ACImageBrowserUtils sharedInstance].currentPage = self.currentPage;
+        self.fullscreenEnable = YES;
+        self.isFullscreen = NO;
         self.imagesURLArray = imagesURLArray;
     }
     return self;
@@ -262,7 +261,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
             index = self.imagesURLArray.count - 1;
         }
         self.currentPage = index;
-        [ACImageBrowserUtils sharedInstance].currentPage = self.currentPage;
         [self updateTitleText];
     }
 }
@@ -289,11 +287,15 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     ACImageBrowserCell *cell =
     (ACImageBrowserCell *)[collectionView dequeueReusableCellWithReuseIdentifier:ACImageBrowserCellItemIdentifier
                                                                     forIndexPath:indexPath];
+
     if (indexPath.section == 0)
     {
+        cell.imageBrowser = self;
+
         [cell configCellImageByURL:self.imagesURLArray[indexPath.item]
                             atItem:indexPath.item];
     }
+    
     return cell;
 }
 
@@ -470,27 +472,29 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     {
         NSString *notificationObject = notification.object;
         
-        BOOL wantToHide = NO;
+        BOOL wantFullscreen = NO;
         
         if ([notificationObject isEqualToString:k_ACIBU_WantFullscreenYES])
         {
-            wantToHide = YES;
+            wantFullscreen = YES;
         }
         
         if (k_ACIBU_OSVersion >= 7.0f)
         {
             // iOS 7
-            [[UIApplication sharedApplication] setStatusBarHidden:wantToHide withAnimation:UIStatusBarAnimationSlide];
+            [[UIApplication sharedApplication] setStatusBarHidden:wantFullscreen withAnimation:UIStatusBarAnimationSlide];
             
-            [self.navigationController setNavigationBarHidden:wantToHide animated:YES];
+            [self.navigationController setNavigationBarHidden:wantFullscreen animated:YES];
             
-            if (wantToHide)
+            if (wantFullscreen)
             {
                 [UIView animateWithDuration:k_ACIBU_BGColor_AnimationDuration animations:^{
                     self.view.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
                     self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
                     self.uglyMaskIV.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-                } completion:NULL];
+                } completion:^(BOOL finished) {
+                    self.isFullscreen = YES;
+                }];
             }
             else
             {
@@ -498,7 +502,9 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
                     self.view.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
                     self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
                     self.uglyMaskIV.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-                } completion:NULL];
+                } completion:^(BOOL finished) {
+                    self.isFullscreen = NO;
+                }];
             }
         }
         else
@@ -530,8 +536,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     // clear memory
     [[SDImageCache sharedImageCache] clearMemory];
     [self removeFullscreenModeNotificationObserver];
-    [ACImageBrowserUtils sharedInstance].isFullscreen = NO;
-    [ACImageBrowserUtils sharedInstance].currentPage = 0;
 }
 
 

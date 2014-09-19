@@ -10,7 +10,7 @@
 
 #import "ACImageBrowserConstants.h"
 
-#import "ACImageBrowserUtils.h"
+#import "ACImageBrowser.h"
 
 
 @implementation ACImageBrowserCell
@@ -20,6 +20,9 @@
 -(void)configCellImageByURL:(NSURL *)url
                      atItem:(NSInteger)item
 {
+    
+    self.zoomableImageScrollView.imageBrowser = self.imageBrowser;
+    
     [self.zoomableImageScrollView configImageByURL:url
                                             atItem:item];
 }
@@ -30,15 +33,6 @@
 {
     [super prepareForReuse];
     
-    // passing item number to SDWebImage and check if is current
-    // for completed block to decide do completed or not
-    // provide a better experience, otherwise if keep scrolling
-    // image never get download
-    // so no need to be cancel operation now
-    
-    // very important for reusing cell
-    //[self.zoomableImageScrollView.webImageOperation cancel];
-    
     self.zoomableImageScrollView.imageView.image = nil;
     
     self.zoomableImageScrollView.progressView.progress = 0.0f;
@@ -46,7 +40,7 @@
     
     self.zoomableImageScrollView.isLoaded = NO;
     
-    if ([ACImageBrowserUtils sharedInstance].isFullscreen)
+    if (self.imageBrowser.isFullscreen)
     {
         self.backgroundColor = k_ACIB_isFullscreen_BGColor;
         self.zoomableImageScrollView.backgroundColor = k_ACIB_isFullscreen_BGColor;
@@ -59,7 +53,6 @@
         self.zoomableImageScrollView.imageView.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
     }
 }
-
 
 #pragma mark - Init
 
@@ -77,7 +70,7 @@
                                   0,
                                   self.bounds.size.width,
                                   self.bounds.size.height)];
-        
+
         self.zoomableImageScrollView.autoresizingMask =
         UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
@@ -85,6 +78,5 @@
     }
     return self;
 }
-
 
 @end
