@@ -28,6 +28,8 @@ UIScrollViewDelegate
 
 @property (nonatomic, assign) BOOL                              isRoating;
 
+@property (nonatomic, assign) NSInteger                         statusBarHiddenInteger;
+
 @property (nonatomic, retain) UIImageView                       *uglyMaskIV;
 @property (nonatomic, retain) UIProgressView                    *uglyMaskPV;
 
@@ -61,6 +63,15 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
 - (void)closeButtonTapped:(UIButton *)sender
 {
+    if (self.statusBarHiddenInteger == 0)
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    }
+    else
+    {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    }
+
     if ([self.delegate respondsToSelector:@selector(dismissAtIndex:)])
     {
         [self.delegate dismissAtIndex:self.currentPage];
@@ -121,6 +132,15 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         self.fullscreenEnable = YES;
         self.isFullscreen = NO;
         self.imagesURLArray = imagesURLArray;
+        
+        if ([UIApplication sharedApplication].statusBarHidden)
+        {
+            self.statusBarHiddenInteger = 1;
+        }
+        else
+        {
+            self.statusBarHiddenInteger = 0;
+        }
     }
     return self;
 }
@@ -154,7 +174,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
     {
-        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
         currentLayout = self.landscapeLayout;
         if (k_ACIBU_OSVersion < 8.0f)
         {
