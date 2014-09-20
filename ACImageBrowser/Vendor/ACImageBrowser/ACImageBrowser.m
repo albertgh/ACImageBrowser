@@ -116,8 +116,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 - (id)initWithImagesURLArray:(NSArray *)imagesURLArray
 {
     self = [super initWithNibName:nil bundle:nil];
-    if (self)
-    {
+    if (self) {
         // Custom initialization
         self.title = @"";
         _currentPage = 0;
@@ -153,7 +152,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     
     CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
                              [UIScreen mainScreen].bounds.size.height);
-    
 
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
     {
@@ -166,12 +164,10 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         }
     }
     
-    
     CGRect rect = CGRectMake(0,
                              0,
                              size.width + k_ACIB_PageGap,
                              size.height);
-    
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:rect
                                              collectionViewLayout:currentLayout];

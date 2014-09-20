@@ -14,34 +14,10 @@
 - (id)init
 {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         // Initialization code
-        
-        CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
-                                 [UIScreen mainScreen].bounds.size.height);
-        
-        if (k_ACIBU_OSVersion < 8.0f)
-        {
-            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                              [UIScreen mainScreen].bounds.size.width);
-        }
-        else
-        {
-            if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))
-            {
-                size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
-                                  [UIScreen mainScreen].bounds.size.height);
-            }
-            else
-            {
-                size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                                  [UIScreen mainScreen].bounds.size.width);
-            }
-        }
-          
-        self.itemSize = size;
-        
+        self.itemSize = CGSizeMake(k_ACIB_PortraitPhoneSize.height, k_ACIB_PortraitPhoneSize.width);
+                
         self.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
         
         self.minimumInteritemSpacing = 0.0f;
@@ -76,6 +52,5 @@
     }
     return NO;
 }
-
 
 @end

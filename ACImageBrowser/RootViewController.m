@@ -91,7 +91,6 @@
     button.layer.borderWidth = 1;
     button.layer.borderColor = borderColor.CGColor;
     
-    
     button.autoresizingMask =
     UIViewAutoresizingFlexibleTopMargin
     | UIViewAutoresizingFlexibleRightMargin

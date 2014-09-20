@@ -33,6 +33,18 @@ static NSString * const ACIB_DISMISS_BUTTON_String                              
 
 
 //-- DO NOT CHANGE THESE ---------------------------------------------------------------------------
+#define k_ACIB_PortraitPhoneSize                                                                    \
+(                                                                                                   \
+  ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)?                                    \
+  (CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)):  \
+  (                                                                                                 \
+    (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))?    \
+    (CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)):\
+    (CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)) \
+  )                                                                                                 \
+)
+
+
 #define k_ACIBU_OSVersion                                   ([[[UIDevice currentDevice] systemVersion] floatValue])
 
 

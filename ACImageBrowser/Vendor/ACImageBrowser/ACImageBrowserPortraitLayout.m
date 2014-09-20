@@ -14,12 +14,9 @@
 - (id)init
 {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         // Initialization code
-        
-        self.itemSize = CGSizeMake([UIScreen mainScreen].bounds.size.width,
-                                   [UIScreen mainScreen].bounds.size.height);
+        self.itemSize = k_ACIB_PortraitPhoneSize;
         
         self.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
         
@@ -48,7 +45,6 @@
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
 {
-    //DLog(@"portrait%@", NSStringFromCGRect(newBounds));
     CGRect oldBounds = self.collectionView.bounds;
     if (!CGSizeEqualToSize(oldBounds.size, newBounds.size))
     {
@@ -56,6 +52,5 @@
     }
     return NO;
 }
-
 
 @end
