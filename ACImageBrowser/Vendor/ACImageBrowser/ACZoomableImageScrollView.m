@@ -65,8 +65,7 @@
         
         __weak UIProgressView *weakProgressView = self.progressView;
         
-        __weak id <SDWebImageOperation> weakOperation = self.webImageOperation;
-        weakOperation =
+        self.webImageOperation =
         [[SDWebImageManager sharedManager]
          downloadImageWithURL:url
          options:SDWebImageRetryFailed | SDWebImageContinueInBackground
