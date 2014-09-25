@@ -20,11 +20,8 @@ UICollectionViewDelegate,
 UIScrollViewDelegate
 >
 
-@property (nonatomic, retain) UICollectionView                  *collectionView;
 @property (nonatomic, retain) ACImageBrowserPortraitLayout      *portraitLayout;
 @property (nonatomic, retain) ACImageBrowserLandscapeLayout     *landscapeLayout;
-
-@property (nonatomic, retain) NSArray                           *imagesURLArray;
 
 @property (nonatomic, retain) UIImageView                       *uglyMaskIV;
 @property (nonatomic, retain) UIProgressView                    *uglyMaskPV;
@@ -53,6 +50,13 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
             index = self.imagesURLArray.count - 1;
     }
     _currentPage = index;
+}
+
+- (void)updateTitleText
+{
+    self.title = [NSString stringWithFormat:@"%lu / %lu",
+                  (unsigned long)(self.currentPage + 1),
+                  (unsigned long)(self.imagesURLArray.count)];
 }
 
 #pragma mark - Action 
@@ -89,13 +93,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     }
 }
 
-- (void)updateTitleText
-{
-    self.title = [NSString stringWithFormat:@"%lu / %lu",
-                  (unsigned long)(self.currentPage + 1),
-                  (unsigned long)(self.imagesURLArray.count)];
-}
-
 - (void)scrollToCurrentIndexByCurrentSize:(CGSize)size animated:(BOOL)animated
 {
     CGFloat contentOffset_x = self.currentPage * (size.width + k_ACIB_PageGap);
@@ -113,7 +110,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
 #pragma mark -
 
-- (id)initWithImagesURLArray:(NSArray *)imagesURLArray
+- (id)initWithImagesURLArray:(NSMutableArray *)imagesURLArray
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
@@ -273,7 +270,10 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    
+//    for (UICollectionViewCell *cell in [self.collectionView visibleCells])
+//    {
+//        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+//    }
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -299,7 +299,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         cell.imageBrowser = self;
 
         [cell configCellImageByURL:self.imagesURLArray[indexPath.item]
-                            atItem:indexPath.item];
+                  inCollectionView:collectionView
+                       atIndexPath:indexPath];
     }
     
     return cell;

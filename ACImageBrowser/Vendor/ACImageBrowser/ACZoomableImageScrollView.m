@@ -8,6 +8,7 @@
 
 #import "ACImageBrowserConstants.h"
 #import "ACImageBrowser.h"
+#import "ACImageBrowserCell.h"
 
 #import "UIImageView+WebCache.h"
 
@@ -24,11 +25,10 @@
 #pragma mark - Config Image
 
 - (void)configImageByURL:(NSURL *)url
-                  atItem:(NSInteger)item
+        inCollectionView:(UICollectionView *)collectionView
+             atIndexPath:(NSIndexPath *)indexPath
 {
-    //NSURL *test = [[NSBundle mainBundle] URLForResource:@"test_long" withExtension:@"gif"];
-    
-    //DLog(@"%@", url);
+    //NSLog(@"%@", url);
     
     // check local or network
     NSString *pathHead = [[url absoluteString] substringToIndex:4];
@@ -54,6 +54,29 @@
     }
     else if ([[pathHead lowercaseString] isEqualToString:k_ACIB_PathHead_HTTPString])
     {
+        BOOL shouldSet = NO;
+        
+        // download image request maybe calls by current cell
+        // or next or prev by scrolling
+        if (ABS(indexPath.item - self.imageBrowser.currentPage) == 1
+            || (indexPath.item - self.imageBrowser.currentPage) == 0)
+        {
+            shouldSet = YES;
+        }
+        
+        // not working for first show
+        /**
+        for (ACImageBrowserCell *cell in [collectionView visibleCells])
+        {
+            NSIndexPath *cellIndexPath = [collectionView indexPathForCell:cell];
+            if (ABS(indexPath.item - cellIndexPath.item) == 1
+                || (indexPath.item - cellIndexPath.item) == 0)
+            {
+                shouldSet = YES;
+            }
+        }
+         */
+        
         CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2.0f, self.bounds.size.height / 2.0f);
         
         self.progressView.alpha = 1.0f;
@@ -70,37 +93,24 @@
          downloadImageWithURL:url
          options:SDWebImageRetryFailed | SDWebImageContinueInBackground
          progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-             
-             if (ABS(item - self.imageBrowser.currentPage) == 1
-                 || (item - self.imageBrowser.currentPage) == 0)
+             if (shouldSet)
              {
                  weakProgressView.progress = ((float)receivedSize / expectedSize);
              }
-             
          }
          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-             
-             //DLog(@"%lu === %lu", item, [ACImageBrowserUtils sharedInstance].currentPage);
-             
              dispatch_async(dispatch_get_main_queue(), ^{
-                 // download image request maybe calls by current cell
-                 // or next or prev by scrolling
-                 if (ABS(item - self.imageBrowser.currentPage) == 1
-                     || (item - self.imageBrowser.currentPage) == 0)
+                 if (shouldSet)
                  {
-                     //DLog(@"should finish");
                      weakProgressView.alpha = 0.0f;
                      weakProgressView.hidden = YES;
-                     
                      if (!error && finished)
                      {
                          weakImageView.image = image;
-                         
                         [self fitImageViewFrameByImageSize:image.size centerPoint:centerPoint];
                      }
                      else
                      {
-                         //NSLog(@"erro");
                          UIImage *errorImage =
                          [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]
                                                            pathForResource:@"error_x" ofType:@"png"]];
@@ -108,16 +118,11 @@
                          [self fitImageViewFrameByImageSize:errorImage.size centerPoint:centerPoint];
                          weakImageView.image = errorImage;
                      }
-                     
                      self.isLoaded = YES;
-                     
                  }
              });
-             
          }];
-                
     }
-    
 }
 
 #pragma mark - Calculate ImageView frame
@@ -127,8 +132,7 @@
     CGFloat imageWidth = size.width;
     CGFloat imageHeight = size.height;
     
-    
-    // 缩回小图
+    // zoom back first
     if (self.zoomScale != 1.0f)
     {
         [self zoomBackWithCenterPoint:center animated:NO];

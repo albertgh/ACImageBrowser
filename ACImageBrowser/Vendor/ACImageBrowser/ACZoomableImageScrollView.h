@@ -23,6 +23,7 @@
 @property (nonatomic, assign) BOOL                          isLoaded;
 
 - (void)configImageByURL:(NSURL *)url
-                  atItem:(NSInteger)item;
+        inCollectionView:(UICollectionView *)collectionView
+             atIndexPath:(NSIndexPath *)indexPath;
 
 @end
