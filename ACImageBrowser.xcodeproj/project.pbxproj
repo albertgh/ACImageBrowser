@@ -14,15 +14,8 @@
 		765AB77019A8545E00F81A2E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB76F19A8545E00F81A2E /* main.m */; };
 		765AB77419A8545E00F81A2E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB77319A8545E00F81A2E /* AppDelegate.m */; };
 		765AB77619A8545E00F81A2E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 765AB77519A8545E00F81A2E /* Images.xcassets */; };
-		765AB77D19A8545E00F81A2E /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765AB77C19A8545E00F81A2E /* XCTest.framework */; };
-		765AB77E19A8545E00F81A2E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765AB76319A8545E00F81A2E /* Foundation.framework */; };
-		765AB77F19A8545E00F81A2E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 765AB76719A8545E00F81A2E /* UIKit.framework */; };
-		765AB78719A8545E00F81A2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 765AB78519A8545E00F81A2E /* InfoPlist.strings */; };
-		765AB78919A8545E00F81A2E /* ACImageBrowserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB78819A8545E00F81A2E /* ACImageBrowserTests.m */; };
 		765AB7C819A8549800F81A2E /* ACImageBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB79519A8549800F81A2E /* ACImageBrowser.m */; };
 		765AB7C919A8549800F81A2E /* ACImageBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB79719A8549800F81A2E /* ACImageBrowserCell.m */; };
-		765AB7CA19A8549800F81A2E /* ACImageBrowserLandscapeLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB79A19A8549800F81A2E /* ACImageBrowserLandscapeLayout.m */; };
-		765AB7CB19A8549800F81A2E /* ACImageBrowserPortraitLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB79C19A8549800F81A2E /* ACImageBrowserPortraitLayout.m */; };
 		765AB7CD19A8549800F81A2E /* ACZoomableImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB7A019A8549800F81A2E /* ACZoomableImageScrollView.m */; };
 		765AB7CE19A8549800F81A2E /* error_x.png in Resources */ = {isa = PBXBuildFile; fileRef = 765AB7A219A8549800F81A2E /* error_x.png */; };
 		765AB7CF19A8549800F81A2E /* error_x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 765AB7A319A8549800F81A2E /* error_x@2x.png */; };
@@ -44,17 +37,9 @@
 		765AB7DF19A8549800F81A2E /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB7C519A8549800F81A2E /* UIImageView+WebCache.m */; };
 		765AB7E019A8549800F81A2E /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB7C719A8549800F81A2E /* UIView+WebCacheOperation.m */; };
 		765AB7E319A859D400F81A2E /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB7E219A859D400F81A2E /* RootViewController.m */; };
+		76D2CA841A14BB9400A57C20 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76D2CA831A14BB9400A57C20 /* Launch Screen.xib */; };
+		76D2CA871A14C2D500A57C20 /* ACImageBrowserLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 76D2CA861A14C2D500A57C20 /* ACImageBrowserLayout.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		765AB78019A8545E00F81A2E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 765AB75819A8545E00F81A2E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 765AB75F19A8545E00F81A2E;
-			remoteInfo = ACImageBrowser;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		765AB76019A8545E00F81A2E /* ACImageBrowser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACImageBrowser.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,20 +53,12 @@
 		765AB77219A8545E00F81A2E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		765AB77319A8545E00F81A2E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		765AB77519A8545E00F81A2E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		765AB77B19A8545E00F81A2E /* ACImageBrowserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ACImageBrowserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		765AB77C19A8545E00F81A2E /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		765AB78419A8545E00F81A2E /* ACImageBrowserTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ACImageBrowserTests-Info.plist"; sourceTree = "<group>"; };
-		765AB78619A8545E00F81A2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		765AB78819A8545E00F81A2E /* ACImageBrowserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserTests.m; sourceTree = "<group>"; };
 		765AB79419A8549800F81A2E /* ACImageBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowser.h; sourceTree = "<group>"; };
 		765AB79519A8549800F81A2E /* ACImageBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowser.m; sourceTree = "<group>"; };
 		765AB79619A8549800F81A2E /* ACImageBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowserCell.h; sourceTree = "<group>"; };
 		765AB79719A8549800F81A2E /* ACImageBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserCell.m; sourceTree = "<group>"; };
 		765AB79819A8549800F81A2E /* ACImageBrowserConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowserConstants.h; sourceTree = "<group>"; };
-		765AB79919A8549800F81A2E /* ACImageBrowserLandscapeLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowserLandscapeLayout.h; sourceTree = "<group>"; };
-		765AB79A19A8549800F81A2E /* ACImageBrowserLandscapeLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserLandscapeLayout.m; sourceTree = "<group>"; };
-		765AB79B19A8549800F81A2E /* ACImageBrowserPortraitLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowserPortraitLayout.h; sourceTree = "<group>"; };
-		765AB79C19A8549800F81A2E /* ACImageBrowserPortraitLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserPortraitLayout.m; sourceTree = "<group>"; };
 		765AB79F19A8549800F81A2E /* ACZoomableImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACZoomableImageScrollView.h; sourceTree = "<group>"; };
 		765AB7A019A8549800F81A2E /* ACZoomableImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACZoomableImageScrollView.m; sourceTree = "<group>"; };
 		765AB7A219A8549800F81A2E /* error_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error_x.png; sourceTree = "<group>"; };
@@ -122,6 +99,9 @@
 		765AB7C719A8549800F81A2E /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
 		765AB7E119A859D400F81A2E /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		765AB7E219A859D400F81A2E /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		76D2CA831A14BB9400A57C20 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
+		76D2CA851A14C2D500A57C20 /* ACImageBrowserLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowserLayout.h; sourceTree = "<group>"; };
+		76D2CA861A14C2D500A57C20 /* ACImageBrowserLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserLayout.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,16 +115,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		765AB77819A8545E00F81A2E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				765AB77D19A8545E00F81A2E /* XCTest.framework in Frameworks */,
-				765AB77F19A8545E00F81A2E /* UIKit.framework in Frameworks */,
-				765AB77E19A8545E00F81A2E /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -152,7 +122,6 @@
 			isa = PBXGroup;
 			children = (
 				765AB76919A8545E00F81A2E /* ACImageBrowser */,
-				765AB78219A8545E00F81A2E /* ACImageBrowserTests */,
 				765AB76219A8545E00F81A2E /* Frameworks */,
 				765AB76119A8545E00F81A2E /* Products */,
 			);
@@ -162,7 +131,6 @@
 			isa = PBXGroup;
 			children = (
 				765AB76019A8545E00F81A2E /* ACImageBrowser.app */,
-				765AB77B19A8545E00F81A2E /* ACImageBrowserTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -186,6 +154,7 @@
 				765AB77319A8545E00F81A2E /* AppDelegate.m */,
 				765AB7E119A859D400F81A2E /* RootViewController.h */,
 				765AB7E219A859D400F81A2E /* RootViewController.m */,
+				76D2CA831A14BB9400A57C20 /* Launch Screen.xib */,
 				765AB77519A8545E00F81A2E /* Images.xcassets */,
 				765AB76A19A8545E00F81A2E /* Supporting Files */,
 			);
@@ -199,24 +168,6 @@
 				765AB76C19A8545E00F81A2E /* InfoPlist.strings */,
 				765AB76F19A8545E00F81A2E /* main.m */,
 				765AB77119A8545E00F81A2E /* ACImageBrowser-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		765AB78219A8545E00F81A2E /* ACImageBrowserTests */ = {
-			isa = PBXGroup;
-			children = (
-				765AB78819A8545E00F81A2E /* ACImageBrowserTests.m */,
-				765AB78319A8545E00F81A2E /* Supporting Files */,
-			);
-			path = ACImageBrowserTests;
-			sourceTree = "<group>";
-		};
-		765AB78319A8545E00F81A2E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				765AB78419A8545E00F81A2E /* ACImageBrowserTests-Info.plist */,
-				765AB78519A8545E00F81A2E /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -236,10 +187,8 @@
 				765AB79819A8549800F81A2E /* ACImageBrowserConstants.h */,
 				765AB79419A8549800F81A2E /* ACImageBrowser.h */,
 				765AB79519A8549800F81A2E /* ACImageBrowser.m */,
-				765AB79B19A8549800F81A2E /* ACImageBrowserPortraitLayout.h */,
-				765AB79C19A8549800F81A2E /* ACImageBrowserPortraitLayout.m */,
-				765AB79919A8549800F81A2E /* ACImageBrowserLandscapeLayout.h */,
-				765AB79A19A8549800F81A2E /* ACImageBrowserLandscapeLayout.m */,
+				76D2CA851A14C2D500A57C20 /* ACImageBrowserLayout.h */,
+				76D2CA861A14C2D500A57C20 /* ACImageBrowserLayout.m */,
 				765AB79619A8549800F81A2E /* ACImageBrowserCell.h */,
 				765AB79719A8549800F81A2E /* ACImageBrowserCell.m */,
 				765AB79F19A8549800F81A2E /* ACZoomableImageScrollView.h */,
@@ -327,24 +276,6 @@
 			productReference = 765AB76019A8545E00F81A2E /* ACImageBrowser.app */;
 			productType = "com.apple.product-type.application";
 		};
-		765AB77A19A8545E00F81A2E /* ACImageBrowserTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 765AB78F19A8545E00F81A2E /* Build configuration list for PBXNativeTarget "ACImageBrowserTests" */;
-			buildPhases = (
-				765AB77719A8545E00F81A2E /* Sources */,
-				765AB77819A8545E00F81A2E /* Frameworks */,
-				765AB77919A8545E00F81A2E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				765AB78119A8545E00F81A2E /* PBXTargetDependency */,
-			);
-			name = ACImageBrowserTests;
-			productName = ACImageBrowserTests;
-			productReference = 765AB77B19A8545E00F81A2E /* ACImageBrowserTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -353,11 +284,6 @@
 			attributes = {
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = AC;
-				TargetAttributes = {
-					765AB77A19A8545E00F81A2E = {
-						TestTargetID = 765AB75F19A8545E00F81A2E;
-					};
-				};
 			};
 			buildConfigurationList = 765AB75B19A8545E00F81A2E /* Build configuration list for PBXProject "ACImageBrowser" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -372,7 +298,6 @@
 			projectRoot = "";
 			targets = (
 				765AB75F19A8545E00F81A2E /* ACImageBrowser */,
-				765AB77A19A8545E00F81A2E /* ACImageBrowserTests */,
 			);
 		};
 /* End PBXProject section */
@@ -387,14 +312,7 @@
 				765AB7CE19A8549800F81A2E /* error_x.png in Resources */,
 				765AB77619A8545E00F81A2E /* Images.xcassets in Resources */,
 				765AB7D019A8549800F81A2E /* LICENSE in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		765AB77919A8545E00F81A2E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				765AB78719A8545E00F81A2E /* InfoPlist.strings in Resources */,
+				76D2CA841A14BB9400A57C20 /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,17 +326,16 @@
 				765AB7D519A8549800F81A2E /* SDWebImageDecoder.m in Sources */,
 				765AB7D819A8549800F81A2E /* SDWebImageManager.m in Sources */,
 				765AB7D219A8549800F81A2E /* NSData+ImageContentType.m in Sources */,
+				76D2CA871A14C2D500A57C20 /* ACImageBrowserLayout.m in Sources */,
 				765AB7D419A8549800F81A2E /* SDWebImageCompat.m in Sources */,
 				765AB7E019A8549800F81A2E /* UIView+WebCacheOperation.m in Sources */,
 				765AB7DD19A8549800F81A2E /* UIImage+WebP.m in Sources */,
 				765AB7CD19A8549800F81A2E /* ACZoomableImageScrollView.m in Sources */,
 				765AB7DE19A8549800F81A2E /* UIImageView+HighlightedWebCache.m in Sources */,
 				765AB77419A8545E00F81A2E /* AppDelegate.m in Sources */,
-				765AB7CB19A8549800F81A2E /* ACImageBrowserPortraitLayout.m in Sources */,
 				765AB7DA19A8549800F81A2E /* UIButton+WebCache.m in Sources */,
 				765AB7D919A8549800F81A2E /* SDWebImagePrefetcher.m in Sources */,
 				765AB7D719A8549800F81A2E /* SDWebImageDownloaderOperation.m in Sources */,
-				765AB7CA19A8549800F81A2E /* ACImageBrowserLandscapeLayout.m in Sources */,
 				765AB7E319A859D400F81A2E /* RootViewController.m in Sources */,
 				765AB7C819A8549800F81A2E /* ACImageBrowser.m in Sources */,
 				765AB7DC19A8549800F81A2E /* UIImage+MultiFormat.m in Sources */,
@@ -432,37 +349,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		765AB77719A8545E00F81A2E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				765AB78919A8545E00F81A2E /* ACImageBrowserTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		765AB78119A8545E00F81A2E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 765AB75F19A8545E00F81A2E /* ACImageBrowser */;
-			targetProxy = 765AB78019A8545E00F81A2E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		765AB76C19A8545E00F81A2E /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				765AB76D19A8545E00F81A2E /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		765AB78519A8545E00F81A2E /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				765AB78619A8545E00F81A2E /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -568,46 +461,6 @@
 			};
 			name = Release;
 		};
-		765AB79019A8545E00F81A2E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ACImageBrowser.app/ACImageBrowser";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ACImageBrowser/ACImageBrowser-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "ACImageBrowserTests/ACImageBrowserTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		765AB79119A8545E00F81A2E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ACImageBrowser.app/ACImageBrowser";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ACImageBrowser/ACImageBrowser-Prefix.pch";
-				INFOPLIST_FILE = "ACImageBrowserTests/ACImageBrowserTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -625,15 +478,6 @@
 			buildConfigurations = (
 				765AB78D19A8545E00F81A2E /* Debug */,
 				765AB78E19A8545E00F81A2E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		765AB78F19A8545E00F81A2E /* Build configuration list for PBXNativeTarget "ACImageBrowserTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				765AB79019A8545E00F81A2E /* Debug */,
-				765AB79119A8545E00F81A2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

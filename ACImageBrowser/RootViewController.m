@@ -17,8 +17,7 @@
 
 @implementation RootViewController
 
-- (void)buttonTapped:(UIButton *)sender
-{
+- (void)buttonTapped:(UIButton *)sender {
     // fake data
     NSMutableArray *photosURL = [[NSMutableArray alloc] init];
     
@@ -35,8 +34,7 @@
                                 @"http://img3.douban.com/view/photo/large/public/p2192132792.jpg"
                                 ];
     
-    for (NSString *str in urlStringArray)
-    {
+    for (NSString *str in urlStringArray) {
         NSURL *url = [NSURL URLWithString:str];
         [photosURL addObject:url];
     }
@@ -52,16 +50,14 @@
 
 #pragma mark - ACImageBrowserDelegate
 
-- (void)dismissAtIndex:(NSInteger)index
-{
+- (void)dismissAtIndex:(NSInteger)index {
     [self dismissViewControllerAnimated:YES completion:nil];
     NSLog(@"Dismiss at index: %lu", (unsigned long)index);
 }
 
 #pragma mark -
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -70,14 +66,13 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-        
+    
     // button
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    button.frame = CGRectMake(70.0, 200.0, 180.0, 40.0);
+    button.frame = CGRectMake((self.view.bounds.size.width - 160.0) / 2, 200.0, 160.0, 40.0);
     [button setTitle:@"show" forState:UIControlStateNormal];
     [button addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -100,8 +95,7 @@
     [self.view addSubview:button];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

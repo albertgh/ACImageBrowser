@@ -19,10 +19,7 @@
 
 - (void)configCellImageByURL:(NSURL *)url
             inCollectionView:(UICollectionView *)collectionView
-                 atIndexPath:(NSIndexPath *)indexPath
-{
-    self.zoomableImageScrollView.imageBrowser = self.imageBrowser;
-    
+                 atIndexPath:(NSIndexPath *)indexPath {
     [self.zoomableImageScrollView configImageByURL:url
                                   inCollectionView:collectionView
                                        atIndexPath:indexPath];
@@ -30,22 +27,16 @@
 
 #pragma mark - Reuse
 
-- (void)prepareForReuse
-{
+- (void)prepareForReuse {
     [super prepareForReuse];
     
-    if (self.imageBrowser.isFullscreen)
-    {
-        self.backgroundColor = k_ACIB_isFullscreen_BGColor;
-    }
-    else
-    {
-        self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
-    }
+    self.backgroundColor =
+    self.imageBrowser.isFullscreen ?
+    k_ACIB_isFullscreen_BGColor :
+    k_ACIB_isNotFullscreen_BGColor;
     
-    // reset zoomableISV
+    // re create zoomableISV
     [self.zoomableImageScrollView removeFromSuperview];
-    
     self.zoomableImageScrollView = nil;
     
     self.zoomableImageScrollView =
@@ -59,25 +50,22 @@
     UIViewAutoresizingFlexibleWidth
     |UIViewAutoresizingFlexibleHeight;
     
+    self.zoomableImageScrollView.imageBrowser = self.imageBrowser;
+
     [self.contentView addSubview:self.zoomableImageScrollView];
 }
 
 #pragma mark - Init
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
         
-        if (self.imageBrowser.isFullscreen)
-        {
-            self.backgroundColor = k_ACIB_isFullscreen_BGColor;
-        }
-        else
-        {
-            self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
-        }
+        self.backgroundColor =
+        self.imageBrowser.isFullscreen ?
+        k_ACIB_isFullscreen_BGColor :
+        k_ACIB_isNotFullscreen_BGColor;
         
         self.autoresizingMask =
         UIViewAutoresizingFlexibleWidth
@@ -87,12 +75,7 @@
         UIViewAutoresizingFlexibleWidth
         |UIViewAutoresizingFlexibleHeight;
         
-        self.zoomableImageScrollView =
-        [[ACZoomableImageScrollView alloc]
-         initWithFrame:CGRectMake(0,
-                                  0,
-                                  self.bounds.size.width,
-                                  self.bounds.size.height)];
+        self.zoomableImageScrollView = [[ACZoomableImageScrollView alloc] init];
         
         self.zoomableImageScrollView.autoresizingMask =
         UIViewAutoresizingFlexibleWidth
@@ -103,6 +86,15 @@
         [self.contentView addSubview:self.zoomableImageScrollView];
     }
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    self.zoomableImageScrollView.frame = CGRectMake(0,
+                                                    0,
+                                                    self.bounds.size.width,
+                                                    self.bounds.size.height);
 }
 
 @end

@@ -3,8 +3,6 @@
 A Image Browser
 
 
-Support iOS 8  now.
-
 <img src="https://github.com/albertgh/ACImageBrowser/raw/master/screenshot.gif"/>
 
 
