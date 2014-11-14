@@ -13,18 +13,14 @@
 #import "UIImageView+WebCache.h"
 
 
-@interface ACImageBrowser ()
-<UICollectionViewDataSource,
-UICollectionViewDelegate,
-UIScrollViewDelegate
->
+@interface ACImageBrowser () <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
-@property (nonatomic, retain) ACImageBrowserLayout          *browserLayout;
+@property (nonatomic, retain) ACImageBrowserLayout              *browserLayout;
 
 @end
 
 
-static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCellItemIdentifier";
+static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrowserCellItemIdentifier";
 
 
 @implementation ACImageBrowser
@@ -37,8 +33,9 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
     if (photoCount == 0) {
         index = 0;
     } else {
-        if (index >= photoCount)
+        if (index >= photoCount) {
             index = self.imagesURLArray.count - 1;
+        }
     }
     _currentPage = index;
 }
@@ -65,9 +62,9 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
 
 #pragma mark - Private
 
-- (void)checkPushOrPresent {
+- (void)addCloseButton {
     if (self.navigationController.viewControllers[0] == self) {
-        //DLog(@"present");
+        //NSLog(@"present");
         self.navigationItem.leftBarButtonItem =
         [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Close", nil)
                                         style:UIBarButtonItemStyleDone
@@ -79,7 +76,6 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
 - (void)scrollToCurrentIndexByCurrentSize:(CGSize)size animated:(BOOL)animated {
     CGFloat contentOffset_x = self.currentPage * (size.width + ACIB_PageGap);
     CGPoint point = CGPointMake(contentOffset_x, 0);
-    
     [self.collectionView setContentOffset:point animated:animated];
 }
 
@@ -96,10 +92,12 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
     if (self) {
         // Custom initialization
         self.title = @"";
+        
+        self.imagesURLArray = imagesURLArray;
         _currentPage = 0;
+        
         self.fullscreenEnable = YES;
         _isFullscreen = NO;
-        self.imagesURLArray = imagesURLArray;
     }
     return self;
 }
@@ -113,21 +111,17 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
     self.view.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
     
     [self createSubviews];
-    
-    [self checkPushOrPresent];
-    
+    [self addCloseButton];
     [self addFullscreenModeNotificationObserver];
 }
 
 - (void)createSubviews {
-    CGSize size = self.view.bounds.size;
+    CGRect rect = CGRectMake(0.0f,
+                             0.0f,
+                             self.view.bounds.size.width + ACIB_PageGap,
+                             self.view.bounds.size.height);
     
-    CGRect rect = CGRectMake(0,
-                             0,
-                             size.width + ACIB_PageGap,
-                             size.height);
-    
-    self.browserLayout = [[ACImageBrowserLayout alloc] initWithItemSize:size];
+    self.browserLayout = [[ACImageBrowserLayout alloc] initWithItemSize:self.view.bounds.size];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:rect
                                              collectionViewLayout:self.browserLayout];
@@ -137,7 +131,6 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
     
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
-
     
     self.collectionView.pagingEnabled = YES;
     
@@ -155,7 +148,6 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
     [super viewWillAppear:animated];
     
     [self updateTitleText];
-    
     [self scrollToCurrentIndexAnimated:NO];
 }
 
@@ -190,13 +182,6 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
     }
 }
 
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-//    for (UICollectionViewCell *cell in [self.collectionView visibleCells])
-//    {
-//        NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-//    }
-}
-
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -227,10 +212,9 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
 
 #pragma mark - UICollectionViewDelegate
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+//- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     //NSLog(@"tap item at index=%ld", (long)indexPath.row);
-    
-}
+//}
 
 #pragma mark - Rotate
 
@@ -244,10 +228,11 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                 duration:(NSTimeInterval)duration {
+    _isRoating = YES;
+
 //    [UIView animateWithDuration:0.01 animations:^{
 //        self.collectionView.alpha = 0.0f;
 //    }];
-    _isRoating = YES;
     
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
@@ -260,53 +245,46 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                          duration:(NSTimeInterval)duration {
+    // must before postNotification
+    [self.collectionView.collectionViewLayout invalidateLayout];
+    
+    //self.browserLayout.itemSize = self.view.bounds.size;
+    
+    self.browserLayout = nil;
+    self.browserLayout = [[ACImageBrowserLayout alloc] initWithItemSize:self.view.bounds.size];
+    
+    [self.collectionView setCollectionViewLayout:self.browserLayout animated:NO];
+
+    
     // pack up info
     NSMutableDictionary *notificationObject = [[NSMutableDictionary alloc] initWithCapacity:1];
     id interfaceOrientation = [NSNumber numberWithInteger:toInterfaceOrientation];
     id durationTime = [NSNumber numberWithDouble:duration];
     notificationObject[ACIBU_WillRotateNotificationInfoInterfaceOrientationKey] = interfaceOrientation;
     notificationObject[ACIBU_WillRotateNotificationInfoDurationTimekey] = durationTime;
-    
-    CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
-                             [UIScreen mainScreen].bounds.size.height);
-    
-    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-        if (k_ACIBU_OSVersion < 8.0f) {
-            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                              [UIScreen mainScreen].bounds.size.width);
-        }
-        [[NSNotificationCenter defaultCenter] postNotificationName:ACIBU_WillRotateNotificationName
-                                                            object:notificationObject];
-    } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:ACIBU_WillRotateNotificationName
-                                                            object:notificationObject];
-    }
-    
-    [self.collectionView.collectionViewLayout invalidateLayout];
-    self.browserLayout.itemSize = size;
-    [self.collectionView setCollectionViewLayout:self.browserLayout animated:NO];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ACIBU_WillRotateNotificationName
+                                                        object:notificationObject];
     
     // rotation animation
     [UIView animateWithDuration:duration animations:^{
         self.collectionView.frame = CGRectMake(0,
                                                0,
-                                               size.width + ACIB_PageGap,
-                                               size.height);
+                                               self.view.bounds.size.width + ACIB_PageGap,
+                                               self.view.bounds.size.height);
     } completion:^(BOOL finished) {
         
     }];
     
-    [self scrollToCurrentIndexAnimated:NO];
-    //[self scrollToCurrentIndexByCurrentSize:size animated:NO];
+    [self scrollToCurrentIndexByCurrentSize:self.view.bounds.size animated:NO];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    _isRoating = NO;
+    
 //    [UIView animateWithDuration:0.01f animations:^{
 //        self.collectionView.alpha = 1.0f;
 //    }];
-    _isRoating = NO;
 }
-
 
 #pragma mark - FullscreenMode NSNotification
 
@@ -354,7 +332,6 @@ static NSString *ACImageBrowserCellItemIdentifier           = @"ACImageBrowserCe
 - (void)removeFullscreenModeNotificationObserver {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 #pragma mark - dealloc
 

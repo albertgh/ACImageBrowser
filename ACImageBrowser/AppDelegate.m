@@ -18,17 +18,15 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     
-    // clear all for test progress
+    // clear cache for testing progressView
     [SDWebImageManager.sharedManager.imageCache clearMemory];
     [SDWebImageManager.sharedManager.imageCache clearDisk];
     
     self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[RootViewController new]];
-
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
 }
-
 
 @end

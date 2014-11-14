@@ -6,7 +6,7 @@
 #define ACImageBrowserConstants_h
 
 
-//-- Custom ----------------------------------------------------------------------------------
+//-- Custom ----------------------------------------------------------------------------------------
 #pragma mark - Custom
 
 #define k_ACIB_isNotFullscreen_BGColor                                              \
@@ -23,7 +23,7 @@ static CGFloat const ACIB_PageGap                                               
 static CGFloat const ACZISV_zoom_bigger                                             = 1.618f;
 
 
-//-------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------//
 
 
 
@@ -32,13 +32,13 @@ static CGFloat const ACZISV_zoom_bigger                                         
 //-- DO NOT CHANGE THESE ---------------------------------------------------------------------------
 #define k_ACIB_PortraitPhoneSize                                                                    \
 (                                                                                                   \
-([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)?                                    \
-(CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)):  \
-(                                                                                                 \
-(UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))?    \
-(CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)):\
-(CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)) \
-)                                                                                                 \
+  ([[[UIDevice currentDevice] systemVersion] floatValue] < 8.0)?                                    \
+  (CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)):  \
+  (                                                                                                 \
+    (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation))?    \
+    (CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)):\
+    (CGSizeMake([UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)) \
+  )                                                                                                 \
 )
 
 
@@ -60,7 +60,7 @@ static NSString * const ACIBU_WantFullscreenNO              = @"ACIBU_WantFullsc
 
 static NSString * const ACIB_PathHead_FileString            = @"file";
 static NSString * const ACIB_PathHead_HTTPString            = @"http";
-//-------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------------------------//
 
 
 #endif

@@ -21,7 +21,6 @@
 
 @implementation ACZoomableImageScrollView
 
-
 #pragma mark - Config Image
 
 - (void)configImageByURL:(NSURL *)url
@@ -58,18 +57,16 @@
         
         // not working for first show
         /**
-        for (ACImageBrowserCell *cell in [collectionView visibleCells])
-        {
+        for (ACImageBrowserCell *cell in [collectionView visibleCells]) {
             NSIndexPath *cellIndexPath = [collectionView indexPathForCell:cell];
             if (ABS(indexPath.item - cellIndexPath.item) == 1
-                || (indexPath.item - cellIndexPath.item) == 0)
-            {
+                || (indexPath.item - cellIndexPath.item) == 0) {
                 shouldSet = YES;
             }
         }
          */
         
-        CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2.0f, self.bounds.size.height / 2.0f);
+        CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
         
         self.progressView.alpha = 1.0f;
         self.progressView.hidden = NO;
@@ -101,7 +98,7 @@
                          UIImage *errorImage =
                          [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]
                                                            pathForResource:@"error_x" ofType:@"png"]];
-                         CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2.0f, self.bounds.size.height / 2.0f);
+                         CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
                          [self fitImageViewFrameByImageSize:errorImage.size centerPoint:centerPoint];
                          weakImageView.image = errorImage;
                      }
@@ -114,8 +111,7 @@
 
 #pragma mark - Calculate ImageView frame
 
-- (void)fitImageViewFrameByImageSize:(CGSize)size centerPoint:(CGPoint)center
-{
+- (void)fitImageViewFrameByImageSize:(CGSize)size centerPoint:(CGPoint)center {
     CGFloat imageWidth = size.width;
     CGFloat imageHeight = size.height;
     
@@ -127,15 +123,13 @@
     CGFloat scale_max = 1.0f * ACZISV_zoom_bigger;
     CGFloat scale_mini = 1.0f;
     
-    self.maximumZoomScale = 1.0 * ACZISV_zoom_bigger;
-    self.minimumZoomScale = 1.0;
+    self.maximumZoomScale = 1.0f * ACZISV_zoom_bigger;
+    self.minimumZoomScale = 1.0f;
     
     BOOL overWidth = imageWidth > self.bounds.size.width;
     BOOL overHeight = imageHeight > self.bounds.size.height;
     
-    
     CGSize fitSize = CGSizeMake(imageWidth, imageHeight);
-    
     
     if (overWidth && overHeight) {
         // fit by image width first if (height / times) still
@@ -162,8 +156,11 @@
         fitSize.height = self.bounds.size.height;
     }
     
-    self.imageView.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
-    self.imageView.center = center;
+    self.imageView.frame = CGRectMake((center.x - fitSize.width / 2),
+                                      (center.y - fitSize.height / 2),
+                                      fitSize.width,
+                                      fitSize.height);
+    
     self.contentSize = CGSizeMake(fitSize.width, fitSize.height);
     
     self.maximumZoomScale = scale_max;
@@ -191,14 +188,15 @@
         }
     }
     
-    CGPoint centerPoint = CGPointMake(size.width / 2.0f, size.height / 2.0f);
+    //NSLog(@"o%@", NSStringFromCGSize(size));
+    //NSLog(@"b%@", NSStringFromCGSize(self.bounds.size));
     
+    CGPoint centerPoint = CGPointMake(size.width / 2, size.height / 2);
+        
     // rotation animation
     [UIView animateWithDuration:duration animations:^{
         // rest imageView
         [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
-        // rest progressView
-        self.progressView.center = centerPoint;
     } completion:^(BOOL finished) {
         
     }];
@@ -232,8 +230,10 @@
         
         [self addRotateNotificationObserver];
         
-        self.delegate = self;
+        self.zoomScale = 1.0f;
         self.bouncesZoom = YES;
+
+        self.delegate = self;
         
         self.scrollEnabled = YES;
         
@@ -244,8 +244,8 @@
         
         self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
         
-        self.zoomScale = 1.0f;
-        
+        self.isLoaded = NO;
+
         [self createSubview];
     }
     return self;
@@ -253,25 +253,28 @@
 
 - (void)createSubview {
     self.imageView = [[UIImageView alloc] init];
-    
+
     self.imageView.autoresizingMask =
     UIViewAutoresizingFlexibleTopMargin
     | UIViewAutoresizingFlexibleRightMargin
     | UIViewAutoresizingFlexibleBottomMargin
     | UIViewAutoresizingFlexibleLeftMargin;
     
-    
     self.imageView.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
     self.imageView.userInteractionEnabled = YES;
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     
-    UITapGestureRecognizer * doubleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    UITapGestureRecognizer * doubleTapGesture =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(handleTapGesture:)];
     doubleTapGesture.numberOfTouchesRequired = 1;
     doubleTapGesture.numberOfTapsRequired = 2;
     doubleTapGesture.delegate = self;
     [self.imageView addGestureRecognizer:doubleTapGesture];
     
-    UITapGestureRecognizer * singleTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
+    UITapGestureRecognizer * singleTapGesture =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(handleTapGesture:)];
     singleTapGesture.delegate= self;
     singleTapGesture.numberOfTouchesRequired = 1;
     singleTapGesture.numberOfTapsRequired = 1;
@@ -280,9 +283,7 @@
     
     [self addSubview:self.imageView];
     
-    self.isLoaded = NO;
-    
-    //-- progress
+    //-- progress view
     self.progressView = [[UIProgressView alloc] init];
     
     self.progressView.autoresizingMask =
@@ -300,9 +301,10 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.contentSize = CGSizeMake(self.bounds.size.width, self.bounds.size.height);
-
-    self.imageView.frame = self.bounds;
+    // image can't zoom by this
+    //NSLog(@"layout size%@", NSStringFromCGSize(self.bounds.size));
+    //CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    //[self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
 
     CGFloat progressView_margin = 36.0f;
     CGFloat progressView_w = self.bounds.size.width - progressView_margin * 2;
@@ -322,7 +324,6 @@
         self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
         self.imageView.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
     }
-
 }
 
 #pragma mark - Scale
@@ -339,8 +340,8 @@
     zoomRect.size.width  = self.frame.size.width  / scale;
     
     // choose an origin so as to get the right center.
-    zoomRect.origin.x    = center.x - (zoomRect.size.width  / 2.0f);
-    zoomRect.origin.y    = center.y - (zoomRect.size.height / 2.0f);
+    zoomRect.origin.x    = center.x - (zoomRect.size.width  / 2);
+    zoomRect.origin.y    = center.y - (zoomRect.size.height / 2);
     
     return zoomRect;
 }
@@ -364,9 +365,9 @@
                                         self.contentSize.height * 0.5f + offsetY);
 }
 
-- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
-    //NSLog(@"%f", scale);
-}
+//- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
+//    //NSLog(@"%f", scale);
+//}
 
 #pragma mark - Zoom Action
 
@@ -422,9 +423,7 @@
             }
         }
         //----------------------------------------------------------------------------------------//
-        
     }
 }
-
 
 @end
