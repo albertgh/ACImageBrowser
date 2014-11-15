@@ -248,6 +248,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     // must before postNotification
     [self.collectionView.collectionViewLayout invalidateLayout];
     
+    // flag: incorrect size after rotation
     //self.browserLayout.itemSize = self.view.bounds.size;
     
     self.browserLayout = nil;

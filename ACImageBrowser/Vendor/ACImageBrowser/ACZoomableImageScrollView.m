@@ -28,23 +28,23 @@
              atIndexPath:(NSIndexPath *)indexPath {
     //NSLog(@"%@", url);
     
+    CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+    
     // check local or network
     NSString *pathHead = [[url absoluteString] substringToIndex:4];
     if ([pathHead isEqualToString:ACIB_PathHead_FileString]) {
         NSData *data = [NSData dataWithContentsOfURL:url];
         UIImage *image = [UIImage imageWithData:data];
-        CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2.0f, self.bounds.size.height / 2.0f);
         if (image) {
-            [self fitImageViewFrameByImageSize:image.size centerPoint:centerPoint];
             self.imageView.image = image;
         } else {
             UIImage *errorImage =
             [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]
                                               pathForResource:@"error_x" ofType:@"png"]];
-            
-            [self fitImageViewFrameByImageSize:errorImage.size centerPoint:centerPoint];
             self.imageView.image = errorImage;
         }
+        [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
+        
     } else if ([[pathHead lowercaseString] isEqualToString:ACIB_PathHead_HTTPString]) {
         BOOL shouldSet = NO;
         
@@ -66,15 +66,10 @@
         }
          */
         
-        CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
-        
         self.progressView.alpha = 1.0f;
         self.progressView.hidden = NO;
         
-        self.progressView.center = centerPoint;
-        
         __weak UIImageView *weakImageView = self.imageView;
-        
         __weak UIProgressView *weakProgressView = self.progressView;
         
         self.webImageOperation =
@@ -93,15 +88,13 @@
                      weakProgressView.hidden = YES;
                      if (!error && finished) {
                          weakImageView.image = image;
-                        [self fitImageViewFrameByImageSize:image.size centerPoint:centerPoint];
                      } else {
                          UIImage *errorImage =
                          [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]
                                                            pathForResource:@"error_x" ofType:@"png"]];
-                         CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
-                         [self fitImageViewFrameByImageSize:errorImage.size centerPoint:centerPoint];
                          weakImageView.image = errorImage;
                      }
+                     [self fitImageViewFrameByImageSize:weakImageView.image.size centerPoint:centerPoint];
                      self.isLoaded = YES;
                  }
              });
@@ -301,7 +294,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    // image can't zoom by this
+    // flag: image can't zoom by this
     //NSLog(@"layout size%@", NSStringFromCGSize(self.bounds.size));
     //CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
     //[self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];

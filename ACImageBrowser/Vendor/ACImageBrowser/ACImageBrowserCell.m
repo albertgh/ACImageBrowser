@@ -28,7 +28,7 @@
 
 - (void)prepareForReuse {
     [super prepareForReuse];
-    
+        
     self.backgroundColor =
     self.imageBrowser.isFullscreen ?
     k_ACIB_isFullscreen_BGColor :
