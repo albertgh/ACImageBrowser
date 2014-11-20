@@ -23,6 +23,12 @@
 
 - (void)setPageIndex:(NSUInteger)index;
 
+//** for custom subclass working with things like bottom toolbar ***************************
+// default animation duration is ACIBU_BGColor_AnimationDuration (0.28f)
+- (void)willAnimateToFullscreenMode;
+- (void)willAnimateToNormalMode;
+//****************************************************************************************//
+
 
 //** for deleting cell *********************************************************************
 @property (nonatomic, retain) UICollectionView              *collectionView;

@@ -307,20 +307,28 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     [self.navigationController setNavigationBarHidden:wantFullscreen animated:YES];
     
     if (wantFullscreen) {
-        [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
-            self.view.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-            self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-        } completion:^(BOOL finished) {
-            _isFullscreen = YES;
-        }];
+        [self willAnimateToFullscreenMode];
     } else {
-        [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
-            self.view.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-            self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-        } completion:^(BOOL finished) {
-            _isFullscreen = NO;
-        }];
+        [self willAnimateToNormalMode];
     }
+}
+
+- (void)willAnimateToFullscreenMode {
+    [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
+        self.view.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+        self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+    } completion:^(BOOL finished) {
+        _isFullscreen = YES;
+    }];
+}
+
+- (void)willAnimateToNormalMode {
+    [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
+        self.view.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+        self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+    } completion:^(BOOL finished) {
+        _isFullscreen = NO;
+    }];
 }
 
 - (void)addFullscreenModeNotificationObserver {
