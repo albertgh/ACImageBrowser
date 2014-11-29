@@ -8,7 +8,7 @@
 
 #import "RootViewController.h"
 
-#import "ACImageBrowser.h"
+#import "YourCustomACImageBrowser.h"
 
 @interface RootViewController () <ACImageBrowserDelegate>
 
@@ -39,7 +39,7 @@
         [photosURL addObject:url];
     }
     
-    ACImageBrowser *browser = [[ACImageBrowser alloc] initWithImagesURLArray:photosURL];
+    YourCustomACImageBrowser *browser = [[YourCustomACImageBrowser alloc] initWithImagesURLArray:photosURL];
     browser.delegate = self;
     //browser.fullscreenEnable = NO;
     [browser setPageIndex:2];

@@ -37,6 +37,8 @@
 		765AB7DF19A8549800F81A2E /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB7C519A8549800F81A2E /* UIImageView+WebCache.m */; };
 		765AB7E019A8549800F81A2E /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB7C719A8549800F81A2E /* UIView+WebCacheOperation.m */; };
 		765AB7E319A859D400F81A2E /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 765AB7E219A859D400F81A2E /* RootViewController.m */; };
+		76C6CD3E1A29DF4400CEE602 /* YourCustomACImageBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 76C6CD3D1A29DF4400CEE602 /* YourCustomACImageBrowser.m */; };
+		76C6CD401A29EE2600CEE602 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76C6CD3F1A29EE2600CEE602 /* AssetsLibrary.framework */; };
 		76D2CA841A14BB9400A57C20 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 76D2CA831A14BB9400A57C20 /* Launch Screen.xib */; };
 		76D2CA871A14C2D500A57C20 /* ACImageBrowserLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 76D2CA861A14C2D500A57C20 /* ACImageBrowserLayout.m */; };
 /* End PBXBuildFile section */
@@ -99,6 +101,9 @@
 		765AB7C719A8549800F81A2E /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
 		765AB7E119A859D400F81A2E /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		765AB7E219A859D400F81A2E /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		76C6CD3C1A29DF4400CEE602 /* YourCustomACImageBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YourCustomACImageBrowser.h; sourceTree = "<group>"; };
+		76C6CD3D1A29DF4400CEE602 /* YourCustomACImageBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YourCustomACImageBrowser.m; sourceTree = "<group>"; };
+		76C6CD3F1A29EE2600CEE602 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		76D2CA831A14BB9400A57C20 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
 		76D2CA851A14C2D500A57C20 /* ACImageBrowserLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACImageBrowserLayout.h; sourceTree = "<group>"; };
 		76D2CA861A14C2D500A57C20 /* ACImageBrowserLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACImageBrowserLayout.m; sourceTree = "<group>"; };
@@ -109,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76C6CD401A29EE2600CEE602 /* AssetsLibrary.framework in Frameworks */,
 				765AB76619A8545E00F81A2E /* CoreGraphics.framework in Frameworks */,
 				765AB76819A8545E00F81A2E /* UIKit.framework in Frameworks */,
 				765AB76419A8545E00F81A2E /* Foundation.framework in Frameworks */,
@@ -138,6 +144,7 @@
 		765AB76219A8545E00F81A2E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				76C6CD3F1A29EE2600CEE602 /* AssetsLibrary.framework */,
 				765AB76319A8545E00F81A2E /* Foundation.framework */,
 				765AB76519A8545E00F81A2E /* CoreGraphics.framework */,
 				765AB76719A8545E00F81A2E /* UIKit.framework */,
@@ -154,6 +161,8 @@
 				765AB77319A8545E00F81A2E /* AppDelegate.m */,
 				765AB7E119A859D400F81A2E /* RootViewController.h */,
 				765AB7E219A859D400F81A2E /* RootViewController.m */,
+				76C6CD3C1A29DF4400CEE602 /* YourCustomACImageBrowser.h */,
+				76C6CD3D1A29DF4400CEE602 /* YourCustomACImageBrowser.m */,
 				76D2CA831A14BB9400A57C20 /* Launch Screen.xib */,
 				765AB77519A8545E00F81A2E /* Images.xcassets */,
 				765AB76A19A8545E00F81A2E /* Supporting Files */,
@@ -333,6 +342,7 @@
 				765AB7CD19A8549800F81A2E /* ACZoomableImageScrollView.m in Sources */,
 				765AB7DE19A8549800F81A2E /* UIImageView+HighlightedWebCache.m in Sources */,
 				765AB77419A8545E00F81A2E /* AppDelegate.m in Sources */,
+				76C6CD3E1A29DF4400CEE602 /* YourCustomACImageBrowser.m in Sources */,
 				765AB7DA19A8549800F81A2E /* UIButton+WebCache.m in Sources */,
 				765AB7D919A8549800F81A2E /* SDWebImagePrefetcher.m in Sources */,
 				765AB7D719A8549800F81A2E /* SDWebImageDownloaderOperation.m in Sources */,

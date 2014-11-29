@@ -8,14 +8,17 @@
 #import "ACImageBrowserLayout.h"
 #import "ACImageBrowserCell.h"
 #import "ACZoomableImageScrollView.h"
-#import "ACImageBrowserConstants.h"
 
 #import "UIImageView+WebCache.h"
 
+#import "AssetsLibrary/AssetsLibrary.h"
 
 @interface ACImageBrowser () <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, retain) ACImageBrowserLayout              *browserLayout;
+
+@property (nonatomic, retain) UICollectionView                  *collectionView;
+@property (nonatomic, retain) NSMutableArray                    *imagesURLArray;
 
 @end
 
@@ -40,10 +43,102 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     _currentPage = index;
 }
 
-- (void)updateTitleText {
-    self.title = [NSString stringWithFormat:@"%lu / %lu",
-                  (unsigned long)(self.currentPage + 1),
-                  (unsigned long)(self.imagesURLArray.count)];
+- (void)willAnimateToFullscreenMode {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _isFullscreen = YES;
+        [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
+            self.view.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+            self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
+        } completion:^(BOOL finished) {
+        }];
+    });
+}
+
+- (void)willAnimateToNormalMode {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        _isFullscreen = NO;
+        [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
+            self.view.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+            self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
+        } completion:^(BOOL finished) {
+        }];
+    });
+}
+
+#pragma mark - Delete And Save
+
+- (void)deletePhotoAtCurrentIndex:(void (^)(void))deletingBlock
+                          success:(void (^)(BOOL finished))finishedBlock {
+    [self.collectionView
+     performBatchUpdates:^{
+         // deleting data
+         [self.imagesURLArray removeObjectAtIndex:self.currentPage];
+         
+         // deleting Cell
+         NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
+         [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:self.currentPage
+                                                           inSection:0]];
+         
+         [self.collectionView deleteItemsAtIndexPaths:arrayWithIndexPaths];
+         
+         if (deletingBlock) {
+             deletingBlock();
+         }
+     }
+     completion:^(BOOL finished) {
+         if (self.imagesURLArray.count == 0) {
+             [self dismissViewControllerAnimated:YES completion:^{
+             }];
+         }
+         else if ((self.imagesURLArray.count - 1) < self.currentPage) {
+             [self setPageIndex:(self.imagesURLArray.count - 1)];
+             [self updateTitleText];
+         }
+         else {
+             [self updateTitleText];
+         }
+         
+         if (finishedBlock) {
+             finishedBlock(finished);
+         }
+     }];
+}
+
+- (void)savePhotoToCameraRollProgress:(void (^)(CGFloat percent))progressBlock
+                              success:(void (^)(BOOL success))successBlock {
+    [[SDWebImageManager sharedManager]
+     downloadImageWithURL:self.imagesURLArray[self.currentPage]
+     options:SDWebImageRetryFailed
+     progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+         if (progressBlock) {
+             progressBlock( ((float)receivedSize / expectedSize) );
+         }
+     }
+     completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+         if (finished && !error && image) {
+             ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+             // Request to save the image to camera roll
+             [library
+              writeImageToSavedPhotosAlbum:[image CGImage]
+              orientation:(ALAssetOrientation)image.imageOrientation
+              completionBlock:^(NSURL *assetURL, NSError *error){
+                 if (!error) {
+                     if (successBlock) {
+                         successBlock(YES);
+                     }
+                 } else {
+                     if (successBlock) {
+                         successBlock(NO);
+                     }
+                 }
+             }];
+         }
+         else {
+             if (successBlock) {
+                 successBlock(NO);
+             }
+         }
+     }];
 }
 
 #pragma mark - Action 
@@ -62,15 +157,10 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
 #pragma mark - Private
 
-- (void)addCloseButton {
-    if (self.navigationController.viewControllers[0] == self) {
-        //NSLog(@"present");
-        self.navigationItem.leftBarButtonItem =
-        [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Close", nil)
-                                        style:UIBarButtonItemStyleDone
-                                       target:self
-                                       action:@selector(closeButtonTapped:)];
-    }
+- (void)updateTitleText {
+    self.title = [NSString stringWithFormat:@"%lu / %lu",
+                  (unsigned long)(self.currentPage + 1),
+                  (unsigned long)(self.imagesURLArray.count)];
 }
 
 - (void)scrollToCurrentIndexByCurrentSize:(CGSize)size animated:(BOOL)animated {
@@ -84,6 +174,16 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
                                 atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
 }
 
+- (void)addCloseButton {
+    if (self.navigationController.viewControllers[0] == self) {
+        //NSLog(@"present");
+        self.navigationItem.leftBarButtonItem =
+        [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Close", nil)
+                                        style:UIBarButtonItemStyleDone
+                                       target:self
+                                       action:@selector(closeButtonTapped:)];
+    }
+}
 
 #pragma mark -
 
@@ -313,23 +413,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     }
 }
 
-- (void)willAnimateToFullscreenMode {
-    [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
-        self.view.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-        self.collectionView.layer.backgroundColor = k_ACIB_isFullscreen_BGColor.CGColor;
-    } completion:^(BOOL finished) {
-        _isFullscreen = YES;
-    }];
-}
-
-- (void)willAnimateToNormalMode {
-    [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
-        self.view.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-        self.collectionView.layer.backgroundColor = k_ACIB_isNotFullscreen_BGColor.CGColor;
-    } completion:^(BOOL finished) {
-        _isFullscreen = NO;
-    }];
-}
 
 - (void)addFullscreenModeNotificationObserver {
     [[NSNotificationCenter defaultCenter] addObserver:self

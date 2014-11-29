@@ -6,6 +6,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ACImageBrowserConstants.h"
+
 
 @protocol ACImageBrowserDelegate <NSObject>
 - (void)dismissAtIndex:(NSInteger)index;
@@ -29,12 +31,12 @@
 - (void)willAnimateToNormalMode;
 //****************************************************************************************//
 
+//** deleting and saving ******************************************************************
+- (void)deletePhotoAtCurrentIndex:(void (^)(void))deletingBlock
+                          success:(void (^)(BOOL finished))finishedBlock;
 
-//** for deleting cell *********************************************************************
-@property (nonatomic, retain) UICollectionView              *collectionView;
-@property (nonatomic, retain) NSMutableArray                *imagesURLArray;
-
-- (void)updateTitleText;
+- (void)savePhotoToCameraRollProgress:(void (^)(CGFloat percent))progressBlock
+                              success:(void (^)(BOOL success))successBlock;
 //****************************************************************************************//
 
 

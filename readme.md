@@ -1,6 +1,6 @@
 ## ACImageBrowser
 
-A Image Browser
+A customizable Image Browser
 
 
 <img src="https://github.com/albertgh/ACImageBrowser/raw/master/screenshot.gif"/>
@@ -8,7 +8,7 @@ A Image Browser
 
 ## Installing
 
-Drag **ACImageBrowser** folder into your project. 
+Drag `ACImageBrowser` folder into your project. 
 
 ```objective-c
 #import "ACImageBrowser.h"
@@ -42,6 +42,27 @@ browser.delegate = self;
     NSLog(@"Dismiss at index: %lu", (unsigned long)index);
 }
 ```
+## Customize
+
+If you want to custom a sub class, here is some methods you should know.
+
+```objc
+//** for custom subclass working with things like bottom toolbar ***************************
+// default animation duration is ACIBU_BGColor_AnimationDuration (0.28f)
+- (void)willAnimateToFullscreenMode;
+- (void)willAnimateToNormalMode;
+//****************************************************************************************//
+
+//** deleting and saving ******************************************************************
+- (void)deletePhotoAtCurrentIndex:(void (^)(void))deletingBlock
+                          success:(void (^)(BOOL finished))finishedBlock;
+
+- (void)savePhotoToCameraRollProgress:(void (^)(CGFloat percent))progressBlock
+                              success:(void (^)(BOOL success))successBlock;
+//****************************************************************************************//
+```
+
+See more in the sample `YourCustomACImageBrowser.m`.
 
 
 #### Requirements
@@ -51,11 +72,11 @@ browser.delegate = self;
 
 #### Open source project used
 
-- [SDWebImage](https://github.com/rs/SDWebImage)
+* [SDWebImage](https://github.com/rs/SDWebImage)
 
 
 #### License
 
-##### MIT 
+* MIT 
 
 
