@@ -18,7 +18,7 @@ Drag `ACImageBrowser` folder into your project.
 ## Usage
 
 ```objc
-// creat the array with your Images URL objects, pass it to initWithImagesURLArray:
+// creat the array with your Images URL objects (notice: NSURL object), pass it to initWithImagesURLArray:
 NSMutableArray *photosURL = [[NSMutableArray alloc] init];
 // ......
 ACImageBrowser *browser = [[ACImageBrowser alloc] initWithImagesURLArray:photosURL];
@@ -36,8 +36,7 @@ browser.delegate = self;
 
 #pragma mark - ACImageBrowserDelegate
 
-- (void)dismissAtIndex:(NSInteger)index
-{
+- (void)dismissAtIndex:(NSInteger)index {
     [self dismissViewControllerAnimated:YES completion:nil];
     NSLog(@"Dismiss at index: %lu", (unsigned long)index);
 }
@@ -47,7 +46,7 @@ browser.delegate = self;
 <img src="https://github.com/albertgh/ACImageBrowser/raw/master/customize.png"/>
 
 
-If you want to custom a sub class, here is some methods you should know.
+If you want to make subclass, here is some methods you should know.
 
 ```objc
 //** for custom subclass working with things like bottom toolbar ******************
