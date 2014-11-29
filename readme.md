@@ -44,22 +44,25 @@ browser.delegate = self;
 ```
 ## Customize
 
+<img src="https://github.com/albertgh/ACImageBrowser/raw/master/customize.png"/>
+
+
 If you want to custom a sub class, here is some methods you should know.
 
 ```objc
-//** for custom subclass working with things like bottom toolbar ***************************
+//** for custom subclass working with things like bottom toolbar ******************
 // default animation duration is ACIBU_BGColor_AnimationDuration (0.28f)
 - (void)willAnimateToFullscreenMode;
 - (void)willAnimateToNormalMode;
-//****************************************************************************************//
+//*******************************************************************************//
 
-//** deleting and saving ******************************************************************
+//** deleting and saving **********************************************************
 - (void)deletePhotoAtCurrentIndex:(void (^)(void))deletingBlock
                           success:(void (^)(BOOL finished))finishedBlock;
 
 - (void)savePhotoToCameraRollProgress:(void (^)(CGFloat percent))progressBlock
                               success:(void (^)(BOOL success))successBlock;
-//****************************************************************************************//
+//*******************************************************************************//
 ```
 
 See more in the sample `YourCustomACImageBrowser.m`.
