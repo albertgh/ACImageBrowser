@@ -130,10 +130,11 @@ static CGFloat const YourCustomACIB_BottomBar_Height            = 49.0f;
 - (void)willAnimateToNormalMode {
     [super willAnimateToNormalMode];
     
+    self.bottomBar.hidden = NO;
     [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
         self.bottomBar.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
-        self.bottomBar.hidden = NO;
+        
     }];
 }
 

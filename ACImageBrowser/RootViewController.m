@@ -19,15 +19,17 @@
 
 - (void)buttonTapped:(UIButton *)sender {
     // fake data
-    NSMutableArray *photosURL = [[NSMutableArray alloc] init];
+    NSMutableArray *photosURLMArray = [[NSMutableArray alloc] init];
     
     NSURL *url = [NSURL URLWithString:@"hTtP://img3.douban.com/view/photo/large/public/p2190945201.jpg"];
-    [photosURL addObject:url];
+    [photosURLMArray addObject:url];
     
     NSArray *urlStringArray = @[
                                 @"http://img3.douban.com/view/photo/large/public/p2190945223.jpg",
+                                @"http://img3.douban.com/view/photo/large/public/p2213168614.jpg",
                                 @"http://ww3.sinaimg.cn/large/bef016betw1egpuchlis1g20ku0dwdp2.gif",
                                 @"http://img3.douban.com/view/photo/large/public/p2190971820.jpg",
+                                @"http://img3.douban.com/view/photo/large/public/p2200781280.jpg",
                                 @"http://img3.douban.com/view/photo/large/public/p2190945210.jpg",
                                 @"http://img5.douban.com/view/photo/large/public/p2190945058.jpg",
                                 @"http://img3.douban.com/view/photo/large/public/p2190945063.jpg",
@@ -36,13 +38,13 @@
     
     for (NSString *str in urlStringArray) {
         NSURL *url = [NSURL URLWithString:str];
-        [photosURL addObject:url];
+        [photosURLMArray addObject:url];
     }
     
-    YourCustomACImageBrowser *browser = [[YourCustomACImageBrowser alloc] initWithImagesURLArray:photosURL];
+    YourCustomACImageBrowser *browser = [[YourCustomACImageBrowser alloc] initWithImagesURLArray:photosURLMArray];
     browser.delegate = self;
     //browser.fullscreenEnable = NO;
-    [browser setPageIndex:2];
+    [browser setPageIndex:3];
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:browser];
     nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentViewController:nc animated:YES completion:nil];
