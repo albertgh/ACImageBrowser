@@ -69,6 +69,8 @@
         self.progressView.alpha = 1.0f;
         self.progressView.hidden = NO;
         
+        __weak typeof(self) weakSelf = self;
+
         __weak UIImageView *weakImageView = self.imageView;
         __weak UIProgressView *weakProgressView = self.progressView;
         
@@ -94,8 +96,8 @@
                                                            pathForResource:@"error_x" ofType:@"png"]];
                          weakImageView.image = errorImage;
                      }
-                     [self fitImageViewFrameByImageSize:weakImageView.image.size centerPoint:centerPoint];
-                     self.isLoaded = YES;
+                     [weakSelf fitImageViewFrameByImageSize:weakImageView.image.size centerPoint:centerPoint];
+                     weakSelf.isLoaded = YES;
                  }
              });
          }];
