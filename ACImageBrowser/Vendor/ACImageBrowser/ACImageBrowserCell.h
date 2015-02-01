@@ -12,7 +12,7 @@
 
 @property (nonatomic, weak) ACImageBrowser                  *imageBrowser;
 
-@property (nonatomic, retain) ACZoomableImageScrollView     *zoomableImageScrollView;
+@property (nonatomic, strong) ACZoomableImageScrollView     *zoomableImageScrollView;
 
 - (void)configCellImageByURL:(NSURL *)url
             inCollectionView:(UICollectionView *)collectionView

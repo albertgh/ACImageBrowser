@@ -14,13 +14,15 @@
 
 @property (nonatomic, weak) ACImageBrowser                  *imageBrowser;
 
-@property (nonatomic, retain) UIImageView                   *imageView;
+@property (nonatomic, strong) NSIndexPath                   *currentIndexPath;
+
+@property (nonatomic, strong) UIImageView                   *imageView;
 
 @property (nonatomic, weak) id <SDWebImageOperation>        webImageOperation;
 
-@property (nonatomic, retain) UIProgressView                *progressView;
+@property (nonatomic, strong) UIProgressView                *progressView;
 
-@property (nonatomic, assign) BOOL                          isLoaded;
+@property (nonatomic) BOOL                                  isLoaded;
 
 - (void)configImageByURL:(NSURL *)url
         inCollectionView:(UICollectionView *)collectionView

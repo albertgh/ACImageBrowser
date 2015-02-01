@@ -46,57 +46,42 @@
         [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
         
     } else if ([[pathHead lowercaseString] isEqualToString:ACIB_PathHead_HTTPString]) {
-        BOOL shouldSet = NO;
+        BOOL isCurrentIndexPath = NO;
         
-        // download image request maybe calls by current cell
-        // or next or prev by scrolling
-        if (ABS(indexPath.item - self.imageBrowser.currentPage) == 1
-            || (indexPath.item - self.imageBrowser.currentPage) == 0) {
-            shouldSet = YES;
-        }
+        NSIndexPath *beginImageDownloadOperationIndexPath = [indexPath copy];
         
-        // not working for first show
-        /**
-        for (ACImageBrowserCell *cell in [collectionView visibleCells]) {
-            NSIndexPath *cellIndexPath = [collectionView indexPathForCell:cell];
-            if (ABS(indexPath.item - cellIndexPath.item) == 1
-                || (indexPath.item - cellIndexPath.item) == 0) {
-                shouldSet = YES;
-            }
+        if (self.currentIndexPath && [beginImageDownloadOperationIndexPath isEqual:self.currentIndexPath]) {
+            isCurrentIndexPath = YES;
         }
-         */
         
         self.progressView.alpha = 1.0f;
         self.progressView.hidden = NO;
         
         __weak typeof(self) weakSelf = self;
-
-        __weak UIImageView *weakImageView = self.imageView;
-        __weak UIProgressView *weakProgressView = self.progressView;
         
         self.webImageOperation =
         [[SDWebImageManager sharedManager]
          downloadImageWithURL:url
          options:SDWebImageRetryFailed | SDWebImageContinueInBackground
          progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-             if (shouldSet) {
-                 weakProgressView.progress = ((float)receivedSize / expectedSize);
+             if (isCurrentIndexPath) {
+                 weakSelf.progressView.progress = ((float)receivedSize / expectedSize);
              }
          }
          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
              dispatch_async(dispatch_get_main_queue(), ^{
-                 if (shouldSet) {
-                     weakProgressView.alpha = 0.0f;
-                     weakProgressView.hidden = YES;
+                 if (isCurrentIndexPath) {
+                     weakSelf.progressView.alpha = 0.0f;
+                     weakSelf.progressView.hidden = YES;
                      if (!error && finished) {
-                         weakImageView.image = image;
+                         weakSelf.imageView.image = image;
                      } else {
                          UIImage *errorImage =
                          [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]
                                                            pathForResource:@"error_x" ofType:@"png"]];
-                         weakImageView.image = errorImage;
+                         weakSelf.imageView.image = errorImage;
                      }
-                     [weakSelf fitImageViewFrameByImageSize:weakImageView.image.size centerPoint:centerPoint];
+                     [weakSelf fitImageViewFrameByImageSize:weakSelf.imageView.image.size centerPoint:centerPoint];
                      weakSelf.isLoaded = YES;
                  }
              });

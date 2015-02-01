@@ -16,9 +16,9 @@
 
 @interface ACImageBrowser : UIViewController
 
-@property (nonatomic, assign) id<ACImageBrowserDelegate>    delegate;
+@property (nonatomic, weak) id<ACImageBrowserDelegate>    delegate;
 
-@property (nonatomic, assign) BOOL                          fullscreenEnable;
+@property (nonatomic) BOOL                          fullscreenEnable;
 
 
 - (id)initWithImagesURLArray:(NSMutableArray *)imagesURLArray;

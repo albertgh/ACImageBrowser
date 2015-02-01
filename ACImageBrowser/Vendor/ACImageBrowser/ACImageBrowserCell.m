@@ -18,6 +18,7 @@
             inCollectionView:(UICollectionView *)collectionView
                  atIndexPath:(NSIndexPath *)indexPath {
     self.zoomableImageScrollView.imageBrowser = self.imageBrowser;
+    self.zoomableImageScrollView.currentIndexPath = indexPath;
 
     [self.zoomableImageScrollView configImageByURL:url
                                   inCollectionView:collectionView
@@ -34,9 +35,8 @@
     k_ACIB_isFullscreen_BGColor :
     k_ACIB_isNotFullscreen_BGColor;
     
-    // re create zoomableISV (for SDWebImage)
-    [self.zoomableImageScrollView removeFromSuperview];
-    self.zoomableImageScrollView = nil;
+    
+    self.zoomableImageScrollView.currentIndexPath = nil;
     
     self.zoomableImageScrollView = [[ACZoomableImageScrollView alloc] init];
     self.zoomableImageScrollView.frame = CGRectMake(0.0f,
