@@ -41,7 +41,7 @@ browser.delegate = self;
     NSLog(@"Dismiss at index: %lu", (unsigned long)index);
 }
 ```
-## Customize
+## Customization
 
 <img src="https://github.com/albertgh/ACImageBrowser/raw/master/customize.png"/>
 
