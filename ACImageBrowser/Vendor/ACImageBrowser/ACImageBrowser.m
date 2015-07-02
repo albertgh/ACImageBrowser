@@ -242,7 +242,38 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     self.collectionView.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
     
     [self.view addSubview:self.collectionView];
-    self.collectionView.alpha = 1.0f;
+    
+    self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
+                                                               attribute:NSLayoutAttributeTop
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.view
+                                                               attribute:NSLayoutAttributeTop
+                                                              multiplier:1.0
+                                                                constant:0.0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
+                                                               attribute:NSLayoutAttributeBottom
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.view
+                                                               attribute:NSLayoutAttributeBottom
+                                                              multiplier:1.0
+                                                                constant:0.0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
+                                                               attribute:NSLayoutAttributeLeft
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.view
+                                                               attribute:NSLayoutAttributeLeft
+                                                              multiplier:1.0
+                                                                constant:0.0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
+                                                               attribute:NSLayoutAttributeRight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.view
+                                                               attribute:NSLayoutAttributeRight
+                                                              multiplier:1.0
+                                                                constant:ACIB_PageGap]];
+    
+    self.collectionView.alpha = 1.0;
     self.collectionView.hidden = NO;
 }
 
@@ -354,9 +385,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     self.browserLayout = nil;
     self.browserLayout = [[ACImageBrowserLayout alloc] initWithItemSize:self.view.bounds.size];
     
-    [self.collectionView setCollectionViewLayout:self.browserLayout animated:NO];
+    [self.collectionView setCollectionViewLayout:self.browserLayout animated:YES];
 
-    
     // pack up info
     NSMutableDictionary *notificationObject = [[NSMutableDictionary alloc] initWithCapacity:1];
     id interfaceOrientation = [NSNumber numberWithInteger:toInterfaceOrientation];
@@ -365,16 +395,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     notificationObject[ACIBU_WillRotateNotificationInfoDurationTimekey] = durationTime;
     [[NSNotificationCenter defaultCenter] postNotificationName:ACIBU_WillRotateNotificationName
                                                         object:notificationObject];
-    
-    // rotation animation
-    [UIView animateWithDuration:duration animations:^{
-        self.collectionView.frame = CGRectMake(0,
-                                               0,
-                                               self.view.bounds.size.width + ACIB_PageGap,
-                                               self.view.bounds.size.height);
-    } completion:^(BOOL finished) {
-        
-    }];
     
     [self scrollToCurrentIndexByCurrentSize:self.view.bounds.size animated:NO];
 }
