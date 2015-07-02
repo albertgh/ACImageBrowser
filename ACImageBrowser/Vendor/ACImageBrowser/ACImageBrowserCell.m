@@ -32,11 +32,7 @@
         UIViewAutoresizingFlexibleWidth
         |UIViewAutoresizingFlexibleHeight;
         
-        self.zoomableImageScrollView = [[ACZoomableImageScrollView alloc] init];
-        self.zoomableImageScrollView.frame = CGRectMake(0.0f,
-                                                        0.0f,
-                                                        self.bounds.size.width,
-                                                        self.bounds.size.height);
+        self.zoomableImageScrollView = [[ACZoomableImageScrollView alloc] initWithFrame:self.bounds];
         
         self.zoomableImageScrollView.autoresizingMask =
         UIViewAutoresizingFlexibleWidth

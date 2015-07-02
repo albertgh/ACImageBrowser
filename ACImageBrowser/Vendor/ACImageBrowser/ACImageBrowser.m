@@ -218,8 +218,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 }
 
 - (void)createSubviews {
-    CGRect rect = CGRectMake(0.0f,
-                             0.0f,
+    CGRect rect = CGRectMake(0.0,
+                             0.0,
                              self.view.bounds.size.width + ACIB_PageGap,
                              self.view.bounds.size.height);
     

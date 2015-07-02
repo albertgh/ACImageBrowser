@@ -10,17 +10,17 @@
 #pragma mark - Custom
 
 #define k_ACIB_isNotFullscreen_BGColor                                              \
-[UIColor colorWithRed:255 / 255.f green:255 / 255.f blue:255 / 255.f alpha:1.0f]
+[UIColor colorWithRed:255 / 255.0 green:255 / 255.0 blue:255 / 255.0 alpha:1.0]
 
 #define k_ACIB_isFullscreen_BGColor                                                 \
-[UIColor colorWithRed:0   / 255.f green:0   / 255.f blue:0   / 255.f alpha:1.0f]
+[UIColor colorWithRed:  0 / 255.0 green:  0 / 255.f blue:  0 / 255.0 alpha:1.0]
 
 
 /** Gap between image */
 static CGFloat const ACIB_PageGap                                                   = 40.0;
 
 /** ZoomableImageScrollView can zoom to how much bigger than original image */
-static CGFloat const ACZISV_zoom_bigger                                             = 1.618f;
+static CGFloat const ACZISV_zoom_bigger                                             = 1.618;
 
 
 //------------------------------------------------------------------------------------------------//
@@ -45,7 +45,7 @@ static CGFloat const ACZISV_zoom_bigger                                         
 #define k_ACIBU_OSVersion                                   ([[[UIDevice currentDevice] systemVersion] floatValue])
 
 
-static CGFloat const ACIBU_BGColor_AnimationDuration        = 0.28f;
+static CGFloat const ACIBU_BGColor_AnimationDuration        = 0.28;
 
 
 static NSString * const ACIBU_WillRotateNotificationName    = @"ACIBU_WillRotateNotificationName";

@@ -30,7 +30,7 @@
         
         [self addRotateNotificationObserver];
         
-        self.zoomScale = 1.0f;
+        self.zoomScale = 1.0;
         self.bouncesZoom = YES;
         
         self.delegate = self;
@@ -74,7 +74,7 @@
         [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
         
     } else if ([[pathHead lowercaseString] isEqualToString:ACIB_PathHead_HTTPString]) {
-        self.progressView.alpha = 1.0f;
+        self.progressView.alpha = 1.0;
         self.progressView.hidden = NO;
         
         __weak __typeof(self)weakSelf = self;
@@ -117,15 +117,15 @@
     CGFloat imageHeight = size.height;
     
     // zoom back first
-    if (self.zoomScale != 1.0f) {
+    if (self.zoomScale != 1.0) {
         [self zoomBackWithCenterPoint:center animated:NO];
     }
     
-    CGFloat scale_max = 1.0f * ACZISV_zoom_bigger;
-    CGFloat scale_mini = 1.0f;
+    CGFloat scale_max = 1.0 * ACZISV_zoom_bigger;
+    CGFloat scale_mini = 1.0;
     
-    self.maximumZoomScale = 1.0f * ACZISV_zoom_bigger;
-    self.minimumZoomScale = 1.0f;
+    self.maximumZoomScale = 1.0 * ACZISV_zoom_bigger;
+    self.minimumZoomScale = 1.0;
     
     BOOL overWidth = imageWidth > self.bounds.size.width;
     BOOL overHeight = imageHeight > self.bounds.size.height;
@@ -183,7 +183,7 @@
                              [UIScreen mainScreen].bounds.size.height);
 
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-        if (k_ACIBU_OSVersion < 8.0f) {
+        if (k_ACIBU_OSVersion < 8.0) {
             size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
                               [UIScreen mainScreen].bounds.size.width);
         }
@@ -267,7 +267,7 @@
     
     self.progressView.userInteractionEnabled = NO;
     [self addSubview:self.progressView];
-    self.progressView.alpha = 0.0f;
+    self.progressView.alpha = 0.0;
     self.progressView.hidden = YES;
 }
 
@@ -279,9 +279,9 @@
     //CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
     //[self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
 
-    CGFloat progressView_margin = 36.0f;
+    CGFloat progressView_margin = 36.0;
     CGFloat progressView_w = self.bounds.size.width - progressView_margin * 2;
-    CGFloat progressView_h = 2.0f;
+    CGFloat progressView_h = 2.0;
     CGFloat progressView_x = progressView_margin;
     CGFloat progressView_y = (self.bounds.size.height - progressView_h) / 2;
     self.progressView.frame = CGRectMake(progressView_x,
@@ -328,14 +328,14 @@
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     CGFloat offsetX =
     (self.bounds.size.width > self.contentSize.width) ?
-    (self.bounds.size.width - self.contentSize.width) * 0.5f : 0.0f;
+    (self.bounds.size.width - self.contentSize.width) * 0.5 : 0.0;
     
     CGFloat offsetY =
     (self.bounds.size.height > self.contentSize.height)?
-    (self.bounds.size.height - self.contentSize.height) * 0.5f : 0.0f;
+    (self.bounds.size.height - self.contentSize.height) * 0.5 : 0.0;
     
-    self.imageView.center = CGPointMake(self.contentSize.width * 0.5f + offsetX,
-                                        self.contentSize.height * 0.5f + offsetY);
+    self.imageView.center = CGPointMake(self.contentSize.width * 0.5 + offsetX,
+                                        self.contentSize.height * 0.5 + offsetY);
 }
 
 //- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale {
@@ -345,14 +345,14 @@
 #pragma mark - Zoom Action
 
 - (void)zoomBackWithCenterPoint:(CGPoint)center animated:(BOOL)animated {
-    CGRect rect = [self zoomRectForScale:1.0f withCenter:center];
+    CGRect rect = [self zoomRectForScale:1.0 withCenter:center];
     [self zoomToRect:rect animated:animated];
 }
 
 - (void)handleTapGesture:(UITapGestureRecognizer *)tapGesture {
     if (tapGesture.numberOfTapsRequired == 2) {
         // don't know why some photo just can not zoom to maximumZoomScale
-        BOOL range_left = self.zoomScale > (self.maximumZoomScale * 0.9f);
+        BOOL range_left = self.zoomScale > (self.maximumZoomScale * 0.9);
         BOOL range_right = self.zoomScale <= self.maximumZoomScale;
         
         if (range_left && range_right) {

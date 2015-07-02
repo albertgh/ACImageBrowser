@@ -9,7 +9,7 @@
 #import "YourCustomACImageBrowser.h"
 
 #define C_ActionText_Color                                                      \
-[UIColor colorWithRed: 0 / 255.f green: 122 / 255.f blue:255 / 255.f alpha:1.f]
+[UIColor colorWithRed: 0 / 255.0 green: 122 / 255.0 blue:255 / 255.0 alpha:1.0]
 
 
 @interface YourCustomACImageBrowser ()
@@ -18,7 +18,7 @@
 
 @end
 
-static CGFloat const YourCustomACIB_BottomBar_Height            = 49.0f;
+static CGFloat const YourCustomACIB_BottomBar_Height            = 49.0;
 
 
 @implementation YourCustomACImageBrowser
@@ -78,41 +78,120 @@ static CGFloat const YourCustomACIB_BottomBar_Height            = 49.0f;
 
 
 - (void)createBottomBar {
-    self.bottomBar = [[UIToolbar alloc] init];
-    self.bottomBar.frame = CGRectMake(0.0f,
-                                      self.view.bounds.size.height - YourCustomACIB_BottomBar_Height,
-                                      self.view.bounds.size.width,
-                                      YourCustomACIB_BottomBar_Height);
-    
+    self.bottomBar = [[UIToolbar alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.bottomBar];
+    self.bottomBar.translatesAutoresizingMaskIntoConstraints = NO;
+//    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBar
+//                                                          attribute:NSLayoutAttributeTop
+//                                                          relatedBy:NSLayoutRelationEqual
+//                                                             toItem:self.view
+//                                                          attribute:NSLayoutAttributeBottom
+//                                                         multiplier:1.0
+//                                                           constant:-YourCustomACIB_BottomBar_Height]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBar
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeNotAnAttribute
+                                                         multiplier:1.0
+                                                           constant:YourCustomACIB_BottomBar_Height]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBar
+                                                          attribute:NSLayoutAttributeBottom
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBar
+                                                          attribute:NSLayoutAttributeLeft
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeLeft
+                                                         multiplier:1.0
+                                                           constant:0.0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.bottomBar
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:1.0
+                                                           constant:0.0]];
 
-    
-    UIButton *leftButton = [[UIButton alloc] init];
-    leftButton.frame = CGRectMake(0.0f,
-                                  0.0f,
-                                  self.view.bounds.size.width / 2,
-                                  YourCustomACIB_BottomBar_Height);
-    
+    // left button
+    UIButton *leftButton = [[UIButton alloc] initWithFrame:CGRectZero];
     [leftButton setTitleColor:C_ActionText_Color forState:UIControlStateNormal];
     [leftButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     [leftButton setTitle:@"Custom Action" forState:UIControlStateNormal];
     [leftButton addTarget:self action:@selector(leftBottomButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.bottomBar addSubview:leftButton];
+    leftButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.bottomBar addConstraint:[NSLayoutConstraint constraintWithItem:leftButton
+                                                               attribute:NSLayoutAttributeHeight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:nil
+                                                               attribute:NSLayoutAttributeNotAnAttribute
+                                                              multiplier:1.0
+                                                                constant:YourCustomACIB_BottomBar_Height]];
+    [self.bottomBar addConstraint:[NSLayoutConstraint constraintWithItem:leftButton
+                                                               attribute:NSLayoutAttributeTop
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.bottomBar
+                                                               attribute:NSLayoutAttributeTop
+                                                              multiplier:1.0
+                                                                constant:0.0]];
+    [self.bottomBar addConstraint:[NSLayoutConstraint constraintWithItem:leftButton
+                                                               attribute:NSLayoutAttributeLeft
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.bottomBar
+                                                               attribute:NSLayoutAttributeLeft
+                                                              multiplier:1.0
+                                                                constant:0.0]];
+    [self.bottomBar addConstraint:[NSLayoutConstraint constraintWithItem:leftButton
+                                                               attribute:NSLayoutAttributeWidth
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.bottomBar
+                                                               attribute:NSLayoutAttributeWidth
+                                                              multiplier:0.5
+                                                                constant:0.0]];
     
-    
-    UIButton *rightButton = [[UIButton alloc] init];
-    rightButton.frame = CGRectMake(self.view.bounds.size.width / 2,
-                                   0.0f,
-                                   self.view.bounds.size.width / 2,
-                                   YourCustomACIB_BottomBar_Height);
-    
+    // right button
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectZero];
     [rightButton setTitleColor:C_ActionText_Color forState:UIControlStateNormal];
     [rightButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
     [rightButton setTitle:@"Save Photo" forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(rightBottomButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.bottomBar addSubview:rightButton];
+    rightButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.bottomBar addConstraint:[NSLayoutConstraint constraintWithItem:rightButton
+                                                               attribute:NSLayoutAttributeHeight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:nil
+                                                               attribute:NSLayoutAttributeNotAnAttribute
+                                                              multiplier:1.0
+                                                                constant:YourCustomACIB_BottomBar_Height]];
+    [self.bottomBar addConstraint:[NSLayoutConstraint constraintWithItem:rightButton
+                                                               attribute:NSLayoutAttributeTop
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.bottomBar
+                                                               attribute:NSLayoutAttributeTop
+                                                              multiplier:1.0
+                                                                constant:0.0]];
+    [self.bottomBar addConstraint:[NSLayoutConstraint constraintWithItem:rightButton
+                                                               attribute:NSLayoutAttributeRight
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.bottomBar
+                                                               attribute:NSLayoutAttributeRight
+                                                              multiplier:1.0
+                                                                constant:0.0]];
+    [self.bottomBar addConstraint:[NSLayoutConstraint constraintWithItem:rightButton
+                                                               attribute:NSLayoutAttributeWidth
+                                                               relatedBy:NSLayoutRelationEqual
+                                                                  toItem:self.bottomBar
+                                                               attribute:NSLayoutAttributeWidth
+                                                              multiplier:0.5
+                                                                constant:0.0]];
 }
 
 #pragma mark - Fullscreen Animation
@@ -121,7 +200,7 @@ static CGFloat const YourCustomACIB_BottomBar_Height            = 49.0f;
     [super willAnimateToFullscreenMode];
     
     [UIView animateWithDuration:ACIBU_BGColor_AnimationDuration animations:^{
-        self.bottomBar.transform = CGAffineTransformMakeTranslation(0, YourCustomACIB_BottomBar_Height);
+        self.bottomBar.transform = CGAffineTransformMakeTranslation(0.0, YourCustomACIB_BottomBar_Height);
     } completion:^(BOOL finished) {
         self.bottomBar.hidden = YES;
     }];
