@@ -21,6 +21,36 @@
 
 @implementation ACZoomableImageScrollView
 
+#pragma mark - Init
+
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        
+        [self addRotateNotificationObserver];
+        
+        self.zoomScale = 1.0f;
+        self.bouncesZoom = YES;
+        
+        self.delegate = self;
+        
+        self.scrollEnabled = YES;
+        
+        self.showsHorizontalScrollIndicator = NO;
+        self.showsVerticalScrollIndicator = NO;
+        
+        //self.alwaysBounceVertical = YES;
+        
+        self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
+        
+        self.isLoaded = NO;
+        
+        [self createSubview];
+    }
+    return self;
+}
+
 #pragma mark - Config Image
 
 - (void)configImageByURL:(NSURL *)url {
@@ -192,35 +222,7 @@
     [self removeRotateNotificationObserver];
 }
 
-#pragma mark - Init
-
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-        
-        [self addRotateNotificationObserver];
-        
-        self.zoomScale = 1.0f;
-        self.bouncesZoom = YES;
-
-        self.delegate = self;
-        
-        self.scrollEnabled = YES;
-        
-        self.showsHorizontalScrollIndicator = NO;
-        self.showsVerticalScrollIndicator = NO;
-        
-        //self.alwaysBounceVertical = YES;
-        
-        self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
-        
-        self.isLoaded = NO;
-
-        [self createSubview];
-    }
-    return self;
-}
+#pragma mark - subview
 
 - (void)createSubview {
     self.imageView = [[UIImageView alloc] init];

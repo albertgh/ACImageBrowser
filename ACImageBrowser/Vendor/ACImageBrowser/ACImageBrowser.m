@@ -28,6 +28,23 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
 @implementation ACImageBrowser
 
+#pragma mark - Init
+
+- (id)initWithImagesURLArray:(NSMutableArray *)imagesURLArray {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        // Custom initialization
+        self.title = @"";
+        
+        self.imagesURLArray = imagesURLArray;
+        _currentPage = 0;
+        
+        self.fullscreenEnable = YES;
+        _isFullscreen = NO;
+    }
+    return self;
+}
+
 #pragma mark - Public
 
 - (void)setPageIndex:(NSUInteger)index {
@@ -186,21 +203,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 }
 
 #pragma mark -
-
-- (id)initWithImagesURLArray:(NSMutableArray *)imagesURLArray {
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) {
-        // Custom initialization
-        self.title = @"";
-        
-        self.imagesURLArray = imagesURLArray;
-        _currentPage = 0;
-        
-        self.fullscreenEnable = YES;
-        _isFullscreen = NO;
-    }
-    return self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

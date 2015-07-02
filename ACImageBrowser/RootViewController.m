@@ -10,12 +10,32 @@
 
 #import "YourCustomACImageBrowser.h"
 
+#import "UIImageView+WebCache.h"
+
 @interface RootViewController () <ACImageBrowserDelegate>
 
 @end
 
 
 @implementation RootViewController
+
+#pragma mark - Init
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+        self.title = @"Sample";
+    }
+    return self;
+}
+
+#pragma mark - Action
+
+- (void)clearCacheButtonTapped:(UIButton *)sender {
+    [[SDImageCache sharedImageCache] clearMemory];
+    [[SDImageCache sharedImageCache] clearDisk];
+}
 
 - (void)buttonTapped:(UIButton *)sender {
     // fake data
@@ -59,18 +79,16 @@
 
 #pragma mark -
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-        self.title = @"Sample";
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.navigationItem.rightBarButtonItem =
+    [[UIBarButtonItem alloc]initWithTitle:NSLocalizedString(@"Clear Cache", nil)
+                                    style:UIBarButtonItemStyleDone
+                                   target:self
+                                   action:@selector(clearCacheButtonTapped:)];
+    
     
     // button
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
