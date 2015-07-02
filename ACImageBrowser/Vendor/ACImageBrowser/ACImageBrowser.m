@@ -302,9 +302,7 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     if (indexPath.section == 0) {
         cell.imageBrowser = self;
 
-        [cell configCellImageByURL:self.imagesURLArray[indexPath.item]
-                  inCollectionView:collectionView
-                       atIndexPath:indexPath];
+        [cell configCellImageByURL:self.imagesURLArray[indexPath.item]];
     }
     
     return cell;

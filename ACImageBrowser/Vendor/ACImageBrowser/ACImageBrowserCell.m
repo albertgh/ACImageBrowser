@@ -14,15 +14,10 @@
 
 #pragma mark - Public
 
-- (void)configCellImageByURL:(NSURL *)url
-            inCollectionView:(UICollectionView *)collectionView
-                 atIndexPath:(NSIndexPath *)indexPath {
+- (void)configCellImageByURL:(NSURL *)url {
     self.zoomableImageScrollView.imageBrowser = self.imageBrowser;
-    self.zoomableImageScrollView.currentIndexPath = indexPath;
-
-    [self.zoomableImageScrollView configImageByURL:url
-                                  inCollectionView:collectionView
-                                       atIndexPath:indexPath];
+    self.zoomableImageScrollView.imageURLString = url.absoluteString;
+    [self.zoomableImageScrollView configImageByURL:url];
 }
 
 #pragma mark - Reuse
@@ -35,9 +30,7 @@
     k_ACIB_isFullscreen_BGColor :
     k_ACIB_isNotFullscreen_BGColor;
     
-    
-    self.zoomableImageScrollView.currentIndexPath = nil;
-    
+    self.zoomableImageScrollView.imageURLString = nil;
     self.zoomableImageScrollView = [[ACZoomableImageScrollView alloc] init];
     self.zoomableImageScrollView.frame = CGRectMake(0.0f,
                                                     0.0f,

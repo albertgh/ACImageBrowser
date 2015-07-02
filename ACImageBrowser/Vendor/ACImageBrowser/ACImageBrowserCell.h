@@ -14,8 +14,6 @@
 
 @property (nonatomic, strong) ACZoomableImageScrollView     *zoomableImageScrollView;
 
-- (void)configCellImageByURL:(NSURL *)url
-            inCollectionView:(UICollectionView *)collectionView
-                 atIndexPath:(NSIndexPath *)indexPath;
+- (void)configCellImageByURL:(NSURL *)url;
 
 @end

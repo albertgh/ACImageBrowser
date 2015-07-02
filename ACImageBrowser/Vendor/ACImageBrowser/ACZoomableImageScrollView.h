@@ -14,9 +14,9 @@
 
 @property (nonatomic, weak) ACImageBrowser                  *imageBrowser;
 
-@property (nonatomic, strong) NSIndexPath                   *currentIndexPath;
-
 @property (nonatomic, strong) UIImageView                   *imageView;
+
+@property (nonatomic, strong) NSString                      *imageURLString;
 
 @property (nonatomic, weak) id <SDWebImageOperation>        webImageOperation;
 
@@ -24,8 +24,6 @@
 
 @property (nonatomic) BOOL                                  isLoaded;
 
-- (void)configImageByURL:(NSURL *)url
-        inCollectionView:(UICollectionView *)collectionView
-             atIndexPath:(NSIndexPath *)indexPath;
+- (void)configImageByURL:(NSURL *)url;
 
 @end

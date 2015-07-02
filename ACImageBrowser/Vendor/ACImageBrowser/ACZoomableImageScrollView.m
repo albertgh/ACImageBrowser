@@ -23,9 +23,7 @@
 
 #pragma mark - Config Image
 
-- (void)configImageByURL:(NSURL *)url
-        inCollectionView:(UICollectionView *)collectionView
-             atIndexPath:(NSIndexPath *)indexPath {
+- (void)configImageByURL:(NSURL *)url {
     //NSLog(@"%@", url);
     
     CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
@@ -46,37 +44,36 @@
         [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
         
     } else if ([[pathHead lowercaseString] isEqualToString:ACIB_PathHead_HTTPString]) {
-        NSIndexPath *beginImageDownloadOperationIndexPath = [indexPath copy];
-        
         self.progressView.alpha = 1.0f;
         self.progressView.hidden = NO;
         
-        __weak typeof(self) weakSelf = self;
-        
+        __weak __typeof(self)weakSelf = self;
         self.webImageOperation =
         [[SDWebImageManager sharedManager]
          downloadImageWithURL:url
          options:SDWebImageRetryFailed | SDWebImageContinueInBackground
          progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-             if (weakSelf.currentIndexPath && [beginImageDownloadOperationIndexPath isEqual:weakSelf.currentIndexPath]) {
-                 weakSelf.progressView.progress = ((float)receivedSize / expectedSize);
+             __strong __typeof(weakSelf)strongSelf = weakSelf;
+             if (strongSelf.imageURLString && [url.absoluteString isEqualToString:strongSelf.imageURLString]) {
+                 strongSelf.progressView.progress = ((float)receivedSize / expectedSize);
              }
          }
          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+             __strong __typeof(weakSelf)strongSelf = weakSelf;
              dispatch_async(dispatch_get_main_queue(), ^{
-                 if (weakSelf.currentIndexPath && [beginImageDownloadOperationIndexPath isEqual:weakSelf.currentIndexPath]) {
-                     weakSelf.progressView.alpha = 0.0f;
-                     weakSelf.progressView.hidden = YES;
+                 if (strongSelf.imageURLString && [url.absoluteString isEqualToString:strongSelf.imageURLString]) {
+                     strongSelf.progressView.alpha = 0.0f;
+                     strongSelf.progressView.hidden = YES;
                      if (image && !error && finished) {
-                         weakSelf.imageView.image = image;
+                         strongSelf.imageView.image = image;
                      } else {
                          UIImage *errorImage =
                          [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]
                                                            pathForResource:@"error_x" ofType:@"png"]];
-                         weakSelf.imageView.image = errorImage;
+                         strongSelf.imageView.image = errorImage;
                      }
-                     [weakSelf fitImageViewFrameByImageSize:weakSelf.imageView.image.size centerPoint:centerPoint];
-                     weakSelf.isLoaded = YES;
+                     [strongSelf fitImageViewFrameByImageSize:weakSelf.imageView.image.size centerPoint:centerPoint];
+                     strongSelf.isLoaded = YES;
                  }
              });
          }];
