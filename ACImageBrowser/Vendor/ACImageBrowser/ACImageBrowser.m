@@ -52,7 +52,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     NSUInteger photoCount = self.imagesURLArray.count;
     if (photoCount == 0) {
         index = 0;
-    } else {
+    }
+    else {
         if (index >= photoCount) {
             index = self.imagesURLArray.count - 1;
         }
@@ -143,7 +144,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
                      if (successBlock) {
                          successBlock(YES);
                      }
-                 } else {
+                 }
+                 else {
                      if (successBlock) {
                          successBlock(NO);
                      }
@@ -167,7 +169,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
     if ([self.delegate respondsToSelector:@selector(dismissAtIndex:)]) {
         [self.delegate dismissAtIndex:self.currentPage];
-    } else {
+    }
+    else {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
@@ -175,20 +178,15 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 #pragma mark - Private
 
 - (void)updateTitleText {
-    self.title = [NSString stringWithFormat:@"%lu / %lu",
-                  (unsigned long)(self.currentPage + 1),
-                  (unsigned long)(self.imagesURLArray.count)];
+    self.title = [NSString stringWithFormat:@"%@ / %@",
+                  @(self.currentPage + 1),
+                  @(self.imagesURLArray.count)];
 }
 
-- (void)scrollToCurrentIndexByCurrentSize:(CGSize)size animated:(BOOL)animated {
-    CGFloat contentOffset_x = self.currentPage * (size.width + ACIB_PageGap);
-    CGPoint point = CGPointMake(contentOffset_x, 0);
+- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated {
+    CGFloat contentOffset_x = index * (self.view.bounds.size.width + ACIB_PageGap);
+    CGPoint point = CGPointMake(contentOffset_x, 0.0);
     [self.collectionView setContentOffset:point animated:animated];
-}
-
-- (void)scrollToCurrentIndexAnimated:(BOOL)animated {
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]
-                                atScrollPosition:UICollectionViewScrollPositionLeft animated:animated];
 }
 
 - (void)addCloseButton {
@@ -218,23 +216,16 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 }
 
 - (void)createSubviews {
-    // fix iOS 7 wrong size
-    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
-        if (self.view.frame.size.width < self.view.frame.size.height) {
-            //NSLog(@"%@", NSStringFromCGRect(self.view.bounds));
-            CGFloat width = self.view.frame.size.width;
-            CGFloat height = self.view.frame.size.height;
-            CGRect rect = self.view.frame;
-            rect.size.width = height;
-            rect.size.height = width;
-            self.view.frame = rect;
-        }
-    }
-    
+    CGRect collectionViewFrame = CGRectMake(0.0,
+                                            0.0,
+                                            self.view.bounds.size.width + ACIB_PageGap,
+                                            self.view.bounds.size.height);
     self.browserLayout = [[ACImageBrowserLayout alloc] initWithItemSize:self.view.bounds.size];
-    
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero
+    self.collectionView = [[UICollectionView alloc] initWithFrame:collectionViewFrame
                                              collectionViewLayout:self.browserLayout];
+    self.collectionView.autoresizingMask =
+    UIViewAutoresizingFlexibleWidth
+    |UIViewAutoresizingFlexibleHeight;
     
     [self.collectionView registerClass:[ACImageBrowserCell class]
             forCellWithReuseIdentifier:ACImageBrowserCellItemIdentifier];
@@ -251,51 +242,22 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     
     [self.view addSubview:self.collectionView];
     
-    self.collectionView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
-                                                               attribute:NSLayoutAttributeTop
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.view
-                                                               attribute:NSLayoutAttributeTop
-                                                              multiplier:1.0
-                                                                constant:0.0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
-                                                               attribute:NSLayoutAttributeBottom
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.view
-                                                               attribute:NSLayoutAttributeBottom
-                                                              multiplier:1.0
-                                                                constant:0.0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
-                                                               attribute:NSLayoutAttributeLeft
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.view
-                                                               attribute:NSLayoutAttributeLeft
-                                                              multiplier:1.0
-                                                                constant:0.0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.collectionView
-                                                               attribute:NSLayoutAttributeRight
-                                                               relatedBy:NSLayoutRelationEqual
-                                                                  toItem:self.view
-                                                               attribute:NSLayoutAttributeRight
-                                                              multiplier:1.0
-                                                                constant:ACIB_PageGap]];
-    
     self.collectionView.alpha = 1.0;
     self.collectionView.hidden = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     [self updateTitleText];
+    
+    [self scrollToIndex:self.currentPage animated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     //NSLog(@"%@", NSStringFromCGSize(self.collectionView.contentSize));
     
-    [self scrollToCurrentIndexByCurrentSize:self.view.bounds.size animated:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -330,20 +292,20 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     return 1;
 }
 
--(NSInteger)collectionView:(UICollectionView *)collectionView
-    numberOfItemsInSection:(NSInteger)section {
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section {
     return self.imagesURLArray.count;
 }
 
--(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                 cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     ACImageBrowserCell *cell =
     (ACImageBrowserCell *)[collectionView dequeueReusableCellWithReuseIdentifier:ACImageBrowserCellItemIdentifier
                                                                     forIndexPath:indexPath];
-
+    
     if (indexPath.section == 0) {
         cell.imageBrowser = self;
-
+        
         [cell configCellImageByURL:self.imagesURLArray[indexPath.item]];
     }
     
@@ -385,28 +347,22 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
                                          duration:(NSTimeInterval)duration {
-    // must before postNotification
     [self.collectionView.collectionViewLayout invalidateLayout];
-    
-    // flag: incorrect size after rotation
-    //self.browserLayout.itemSize = self.view.bounds.size;
-    
     self.browserLayout = nil;
     self.browserLayout = [[ACImageBrowserLayout alloc] initWithItemSize:self.view.bounds.size];
-    
-    [self.collectionView setCollectionViewLayout:self.browserLayout animated:YES];
+    [self.collectionView setCollectionViewLayout:self.browserLayout animated:NO];
 
-    // pack up info
-    NSMutableDictionary *notificationObject = [[NSMutableDictionary alloc] initWithCapacity:1];
-    id interfaceOrientation = [NSNumber numberWithInteger:toInterfaceOrientation];
-    id durationTime = [NSNumber numberWithDouble:duration];
-    notificationObject[ACIBU_WillRotateNotificationInfoInterfaceOrientationKey] = interfaceOrientation;
-    notificationObject[ACIBU_WillRotateNotificationInfoDurationTimekey] = durationTime;
-    [[NSNotificationCenter defaultCenter] postNotificationName:ACIBU_WillRotateNotificationName
-                                                        object:notificationObject];
+    // rotation animation
+    [UIView animateWithDuration:duration animations:^{
+        self.collectionView.frame = CGRectMake(0,
+                                               0,
+                                               self.view.bounds.size.width + ACIB_PageGap,
+                                               self.view.bounds.size.height);
+    } completion:^(BOOL finished) {
+        
+    }];
     
-    //[self scrollToCurrentIndexByCurrentSize:self.view.bounds.size animated:NO];
-    [self scrollToCurrentIndexAnimated:NO];
+    [self scrollToIndex:self.currentPage animated:NO];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

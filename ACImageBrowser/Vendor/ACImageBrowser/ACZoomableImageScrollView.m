@@ -174,36 +174,9 @@
 #pragma mark - Orientation func
 
 - (void)orientationChange:(NSNotification*)notification {
-    NSDictionary *notificationObject = notification.object;
-    
-    UIInterfaceOrientation toInterfaceOrientation =
-    (UIInterfaceOrientation)[notificationObject[ACIBU_WillRotateNotificationInfoInterfaceOrientationKey] integerValue];
-    
-    NSTimeInterval duration =
-    (NSTimeInterval)[notificationObject[ACIBU_WillRotateNotificationInfoDurationTimekey] doubleValue];
-    
-    CGSize size = CGSizeMake([UIScreen mainScreen].bounds.size.width,
-                             [UIScreen mainScreen].bounds.size.height);
-
-    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-        if (k_ACIBU_OSVersion < 8.0) {
-            size = CGSizeMake([UIScreen mainScreen].bounds.size.height,
-                              [UIScreen mainScreen].bounds.size.width);
-        }
-    }
-    
-    //NSLog(@"o%@", NSStringFromCGSize(size));
-    //NSLog(@"b%@", NSStringFromCGSize(self.bounds.size));
-    
+    CGSize size = self.bounds.size;
     CGPoint centerPoint = CGPointMake(size.width / 2, size.height / 2);
-        
-    // rotation animation
-    [UIView animateWithDuration:duration animations:^{
-        // rest imageView
-        [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
-    } completion:^(BOOL finished) {
-        
-    }];
+    [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
 }
 
 #pragma mark - add orientation notification listener
@@ -211,7 +184,7 @@
 - (void)addRotateNotificationObserver {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(orientationChange:)
-                                                 name:ACIBU_WillRotateNotificationName
+                                                 name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
 }
 

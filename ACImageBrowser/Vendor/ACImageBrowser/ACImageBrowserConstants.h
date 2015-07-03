@@ -47,13 +47,6 @@ static CGFloat const ACZISV_zoom_bigger                                         
 
 static CGFloat const ACIBU_BGColor_AnimationDuration        = 0.28;
 
-
-static NSString * const ACIBU_WillRotateNotificationName    = @"ACIBU_WillRotateNotificationName";
-static NSString * const ACIBU_WillRotateNotificationInfoInterfaceOrientationKey
-= @"ACIBU_WillRotateNotificationInfoInterfaceOrientationKey";
-static NSString * const ACIBU_WillRotateNotificationInfoDurationTimekey
-= @"ACIBU_WillRotateNotificationInfoDurationTimekey";
-
 static NSString * const ACIBU_FullscreenNotificationName    = @"ACIBU_FullscreenNotificationName";
 static NSString * const ACIBU_WantFullscreenYES             = @"ACIBU_WantFullscreenYES";
 static NSString * const ACIBU_WantFullscreenNO              = @"ACIBU_WantFullscreenNO";
