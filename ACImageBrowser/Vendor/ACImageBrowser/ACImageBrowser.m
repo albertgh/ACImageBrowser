@@ -218,14 +218,22 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 }
 
 - (void)createSubviews {
-    CGRect rect = CGRectMake(0.0,
-                             0.0,
-                             self.view.bounds.size.width + ACIB_PageGap,
-                             self.view.bounds.size.height);
+    // fix iOS 7 wrong size
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        if (self.view.frame.size.width < self.view.frame.size.height) {
+            //NSLog(@"%@", NSStringFromCGRect(self.view.bounds));
+            CGFloat width = self.view.frame.size.width;
+            CGFloat height = self.view.frame.size.height;
+            CGRect rect = self.view.frame;
+            rect.size.width = height;
+            rect.size.height = width;
+            self.view.frame = rect;
+        }
+    }
     
     self.browserLayout = [[ACImageBrowserLayout alloc] initWithItemSize:self.view.bounds.size];
     
-    self.collectionView = [[UICollectionView alloc] initWithFrame:rect
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero
                                              collectionViewLayout:self.browserLayout];
     
     [self.collectionView registerClass:[ACImageBrowserCell class]
@@ -281,12 +289,13 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     [super viewWillAppear:animated];
     
     [self updateTitleText];
-    [self scrollToCurrentIndexAnimated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     //NSLog(@"%@", NSStringFromCGSize(self.collectionView.contentSize));
+    
+    [self scrollToCurrentIndexByCurrentSize:self.view.bounds.size animated:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -396,11 +405,15 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     [[NSNotificationCenter defaultCenter] postNotificationName:ACIBU_WillRotateNotificationName
                                                         object:notificationObject];
     
-    [self scrollToCurrentIndexByCurrentSize:self.view.bounds.size animated:NO];
+    //[self scrollToCurrentIndexByCurrentSize:self.view.bounds.size animated:NO];
+    [self scrollToCurrentIndexAnimated:NO];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     _isRoating = NO;
+    
+//    NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:self.currentPage inSection:0];
+//    [self.collectionView reloadItemsAtIndexPaths:@[currentIndexPath]];
     
 //    [UIView animateWithDuration:0.01f animations:^{
 //        self.collectionView.alpha = 1.0f;
