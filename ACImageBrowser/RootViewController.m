@@ -68,6 +68,12 @@
     UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:browser];
     nc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentViewController:nc animated:YES completion:nil];
+    
+    
+    // test scroll
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [browser scrollToIndex:0 animated:YES];
+//    });
 }
 
 #pragma mark - ACImageBrowserDelegate

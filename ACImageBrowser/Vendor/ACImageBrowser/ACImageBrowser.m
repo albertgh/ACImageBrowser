@@ -58,17 +58,15 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 #pragma mark - Public
 
 - (void)setPageIndex:(NSUInteger)index {
-    // validate
-    NSUInteger photoCount = self.imagesURLArray.count;
-    if (photoCount == 0) {
-        index = 0;
-    }
-    else {
-        if (index >= photoCount) {
-            index = self.imagesURLArray.count - 1;
-        }
-    }
-    _currentPage = index;
+    NSUInteger validatedIndex = [self validateIndex:index];
+    _currentPage = validatedIndex;
+}
+
+- (void)scrollToIndex:(NSUInteger)index animated:(BOOL)animated {
+    NSUInteger validatedIndex = [self validateIndex:index];
+    CGFloat contentOffset_x = validatedIndex * (self.view.bounds.size.width + ACIB_PageGap);
+    CGPoint point = CGPointMake(contentOffset_x, 0.0);
+    [self.collectionView setContentOffset:point animated:animated];
 }
 
 - (void)willAnimateToFullscreenMode {
@@ -193,10 +191,15 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
                   @(self.imagesURLArray.count)];
 }
 
-- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated {
-    CGFloat contentOffset_x = index * (self.view.bounds.size.width + ACIB_PageGap);
-    CGPoint point = CGPointMake(contentOffset_x, 0.0);
-    [self.collectionView setContentOffset:point animated:animated];
+- (NSUInteger)validateIndex:(NSUInteger)index {
+    NSUInteger validatedIndex = 0;
+    if (self.imagesURLArray.count > 0 && index >= self.imagesURLArray.count) {
+        validatedIndex = self.imagesURLArray.count - 1;
+    }
+    else {
+        validatedIndex = index;
+    }
+    return validatedIndex;
 }
 
 - (void)addCloseButton {
@@ -226,6 +229,19 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 }
 
 - (void)createSubviews {
+    // fix iOS 7 wrong size
+    if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        if (self.view.frame.size.width < self.view.frame.size.height) {
+            //NSLog(@"%@", NSStringFromCGRect(self.view.bounds));
+            CGFloat width = self.view.frame.size.width;
+            CGFloat height = self.view.frame.size.height;
+            CGRect rect = self.view.frame;
+            rect.size.width = height;
+            rect.size.height = width;
+            self.view.frame = rect;
+        }
+    }
+    
     CGRect collectionViewFrame = CGRectMake(0.0,
                                             0.0,
                                             self.view.bounds.size.width + ACIB_PageGap,

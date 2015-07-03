@@ -24,6 +24,7 @@
 - (id)initWithImagesURLArray:(NSMutableArray *)imagesURLArray;
 
 - (void)setPageIndex:(NSUInteger)index;
+- (void)scrollToIndex:(NSUInteger)index animated:(BOOL)animated;
 
 //** for custom subclass working with things like bottom toolbar ***************************
 // default animation duration is ACIBU_BGColor_AnimationDuration (0.28f)
