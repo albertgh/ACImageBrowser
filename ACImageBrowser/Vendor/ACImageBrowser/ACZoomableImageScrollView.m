@@ -74,8 +74,8 @@
         [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
         
     } else if ([[pathHead lowercaseString] isEqualToString:ACIB_PathHead_HTTPString]) {
-        self.progressView.alpha = 1.0;
-        self.progressView.hidden = NO;
+        
+        NSString *beginDownloadImageURLString = [url.absoluteString copy];
         
         __weak __typeof(self)weakSelf = self;
         self.webImageOperation =
@@ -84,15 +84,18 @@
          options:SDWebImageRetryFailed | SDWebImageContinueInBackground
          progress:^(NSInteger receivedSize, NSInteger expectedSize) {
              __strong __typeof(weakSelf)strongSelf = weakSelf;
-             if (strongSelf.imageURLString && [url.absoluteString isEqualToString:strongSelf.imageURLString]) {
+             strongSelf.progressView.alpha = 1.0;
+             strongSelf.progressView.hidden = NO;
+             strongSelf.progressView.progress = 0.0;
+             if (strongSelf.imageURLString && [beginDownloadImageURLString isEqualToString:strongSelf.imageURLString]) {
                  strongSelf.progressView.progress = ((float)receivedSize / expectedSize);
              }
          }
          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
              __strong __typeof(weakSelf)strongSelf = weakSelf;
              dispatch_async(dispatch_get_main_queue(), ^{
-                 if (strongSelf.imageURLString && [url.absoluteString isEqualToString:strongSelf.imageURLString]) {
-                     strongSelf.progressView.alpha = 0.0f;
+                 if (strongSelf.imageURLString && [beginDownloadImageURLString isEqualToString:strongSelf.imageURLString]) {
+                     strongSelf.progressView.alpha = 0.0;
                      strongSelf.progressView.hidden = YES;
                      if (image && !error && finished) {
                          strongSelf.imageView.image = image;
