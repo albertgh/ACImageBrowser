@@ -13,7 +13,9 @@
 
 #import "AssetsLibrary/AssetsLibrary.h"
 
-@interface ACImageBrowser () <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
+
+@interface ACImageBrowser ()
+<UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, retain) ACImageBrowserLayout              *browserLayout;
 
@@ -43,6 +45,14 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
         _isFullscreen = NO;
     }
     return self;
+}
+
+#pragma mark - dealloc
+
+-(void)dealloc {
+    // clear memory
+    [[SDImageCache sharedImageCache] clearMemory];
+    [self removeFullscreenModeNotificationObserver];
 }
 
 #pragma mark - Public
@@ -249,15 +259,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    [self updateTitleText];
-    
     [self scrollToIndex:self.currentPage animated:NO];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    //NSLog(@"%@", NSStringFromCGSize(self.collectionView.contentSize));
-    
+    [self updateTitleText];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -305,7 +308,6 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     
     if (indexPath.section == 0) {
         cell.imageBrowser = self;
-        
         [cell configCellImageByURL:self.imagesURLArray[indexPath.item]];
     }
     
@@ -338,7 +340,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     
     if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-    } else {
+    }
+    else {
         if (!self.isFullscreen) {
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
         }
@@ -389,7 +392,8 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     
     if (UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
-    } else {
+    }
+    else {
         [[UIApplication sharedApplication] setStatusBarHidden:wantFullscreen withAnimation:UIStatusBarAnimationSlide];
     }
     
@@ -397,11 +401,11 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     
     if (wantFullscreen) {
         [self willAnimateToFullscreenMode];
-    } else {
+    }
+    else {
         [self willAnimateToNormalMode];
     }
 }
-
 
 - (void)addFullscreenModeNotificationObserver {
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -414,12 +418,5 @@ static NSString *ACImageBrowserCellItemIdentifier               = @"ACImageBrows
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - dealloc
-
--(void)dealloc {
-    // clear memory
-    [[SDImageCache sharedImageCache] clearMemory];
-    [self removeFullscreenModeNotificationObserver];
-}
 
 @end

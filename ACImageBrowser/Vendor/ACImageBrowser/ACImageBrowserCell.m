@@ -45,14 +45,6 @@
     return self;
 }
 
-#pragma mark - Public
-
-- (void)configCellImageByURL:(NSURL *)url {
-    self.zoomableImageScrollView.imageBrowser = self.imageBrowser;
-    self.zoomableImageScrollView.imageURLString = url.absoluteString;
-    [self.zoomableImageScrollView configImageByURL:url];
-}
-
 #pragma mark - Reuse
 
 - (void)prepareForReuse {
@@ -69,6 +61,14 @@
     self.zoomableImageScrollView.progressView.alpha = 0.0;
     self.zoomableImageScrollView.progressView.hidden = YES;
     self.zoomableImageScrollView.isLoaded = NO;
+}
+
+#pragma mark - Public
+
+- (void)configCellImageByURL:(NSURL *)url {
+    self.zoomableImageScrollView.imageBrowser = self.imageBrowser;
+    self.zoomableImageScrollView.imageURLString = url.absoluteString;
+    [self.zoomableImageScrollView configImageByURL:url];
 }
 
 

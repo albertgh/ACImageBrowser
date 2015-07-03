@@ -51,6 +51,12 @@
     return self;
 }
 
+#pragma mark - dealloc
+
+-(void)dealloc {
+    [self removeRotateNotificationObserver];
+}
+
 #pragma mark - Config Image
 
 - (void)configImageByURL:(NSURL *)url {
@@ -65,7 +71,8 @@
         UIImage *image = [UIImage imageWithData:data];
         if (image) {
             self.imageView.image = image;
-        } else {
+        }
+        else {
             UIImage *errorImage =
             [UIImage imageWithContentsOfFile:[[NSBundle mainBundle]
                                               pathForResource:@"error_x" ofType:@"png"]];
@@ -73,8 +80,8 @@
         }
         [self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
         
-    } else if ([[pathHead lowercaseString] isEqualToString:ACIB_PathHead_HTTPString]) {
-        
+    }
+    else if ([[pathHead lowercaseString] isEqualToString:ACIB_PathHead_HTTPString]) {
         NSString *beginDownloadImageURLString = [url.absoluteString copy];
         
         __weak __typeof(self)weakSelf = self;
@@ -145,18 +152,21 @@
             scale_max =  timesThanScreenWidth * ACZISV_zoom_bigger;
             fitSize.width = self.bounds.size.width;
             fitSize.height = imageHeight / timesThanScreenWidth;
-        } else {
+        }
+        else {
             CGFloat timesThanScreenHeight = (imageHeight / self.bounds.size.height);
             scale_max =  timesThanScreenHeight * ACZISV_zoom_bigger;
             fitSize.width = imageWidth / timesThanScreenHeight;
             fitSize.height = self.bounds.size.height;
         }
-    } else if (overWidth && !overHeight) {
+    }
+    else if (overWidth && !overHeight) {
         CGFloat timesThanFrameWidth = (imageWidth / self.bounds.size.width);
         scale_max =  timesThanFrameWidth * ACZISV_zoom_bigger;
         fitSize.width = self.bounds.size.width;
         fitSize.height = imageHeight / timesThanFrameWidth;
-    } else if (overHeight && !overWidth) {
+    }
+    else if (overHeight && !overWidth) {
         fitSize.height = self.bounds.size.height;
     }
     
@@ -192,17 +202,11 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - dealloc
-
--(void)dealloc {
-    [self removeRotateNotificationObserver];
-}
-
 #pragma mark - subview
 
 - (void)createSubview {
-    self.imageView = [[UIImageView alloc] init];
-
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    
     self.imageView.autoresizingMask =
     UIViewAutoresizingFlexibleTopMargin
     | UIViewAutoresizingFlexibleRightMargin
@@ -233,7 +237,7 @@
     [self addSubview:self.imageView];
     
     //-- progress view
-    self.progressView = [[UIProgressView alloc] init];
+    self.progressView = [[UIProgressView alloc] initWithFrame:CGRectZero];
     
     self.progressView.autoresizingMask =
     UIViewAutoresizingFlexibleTopMargin
@@ -254,7 +258,7 @@
     //NSLog(@"layout size%@", NSStringFromCGSize(self.bounds.size));
     //CGPoint centerPoint = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
     //[self fitImageViewFrameByImageSize:self.imageView.image.size centerPoint:centerPoint];
-
+    
     CGFloat progressView_margin = 36.0;
     CGFloat progressView_w = self.bounds.size.width - progressView_margin * 2;
     CGFloat progressView_h = 2.0;
@@ -269,7 +273,8 @@
     if (self.imageBrowser.isFullscreen) {
         self.backgroundColor = k_ACIB_isFullscreen_BGColor;
         self.imageView.backgroundColor = k_ACIB_isFullscreen_BGColor;
-    } else {
+    }
+    else {
         self.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
         self.imageView.backgroundColor = k_ACIB_isNotFullscreen_BGColor;
     }
@@ -335,12 +340,14 @@
             CGRect rect = [self zoomRectForScale:self.minimumZoomScale
                                       withCenter:[tapGesture locationInView:tapGesture.view]];
             [self zoomToRect:rect animated:YES];
-        } else {
+        }
+        else {
             CGRect rect = [self zoomRectForScale:self.maximumZoomScale
                                       withCenter:[tapGesture locationInView:tapGesture.view]];
             [self zoomToRect:rect animated:YES];
         }
-    } else if (tapGesture.numberOfTapsRequired == 1) {
+    }
+    else if (tapGesture.numberOfTapsRequired == 1) {
         //-- fullscreen mode switch ----------------------------------------------------------------
         if (!self.imageBrowser.isRoating) {
             if (self.imageBrowser.fullscreenEnable) {
@@ -356,7 +363,8 @@
                     } completion:^(BOOL finished) {
                         self.userInteractionEnabled = YES;
                     }];
-                } else {
+                }
+                else {
                     self.userInteractionEnabled = NO;
                     
                     [[NSNotificationCenter defaultCenter] postNotificationName:ACIBU_FullscreenNotificationName
